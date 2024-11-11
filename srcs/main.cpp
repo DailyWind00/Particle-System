@@ -41,14 +41,11 @@ int main(int argc, char **argv) {
 
 	try {
 		GLFWwindow *window = CreateWindow();
-		try {
-			testOpenCL();
-			// OpenGL context
-			// Main loop
-			// Cleanup
-		}
-		catch(const std::exception& e) {
-			throw runtime_error(e.what());
+		testOpenCL();
+		// Main loop call
+		while (!glfwWindowShouldClose(window)) {
+			glfwSwapBuffers(window);
+			glfwPollEvents();
 		}
 		DestroyWindow(window);
 	}
