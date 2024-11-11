@@ -1,2 +1,2 @@
 # Particle-System
-Instancing and optimization
+Instancing and optimization using OpenCL
