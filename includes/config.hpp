@@ -30,6 +30,7 @@ enum class KEYBOARD_LANGUAGE {
 extern int		WINDOW_WIDTH;
 extern int		WINDOW_HEIGHT;
 extern double	FRAMETIME;
+extern size_t	FPS;
 extern float	FOV;
 
 // Flags (default values are set in flags.cpp)
@@ -57,3 +58,4 @@ void			displayCommands();
 ifstream		openReadFile(const string &filename);
 unsigned char	*stbi_loader(const string &filename, int &width, int &height, int &nrChannels);
 void			printVerbose(const string &message, bool newline = true);
+void			getFrametime();

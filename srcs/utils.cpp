@@ -1,6 +1,7 @@
 #include "config.hpp"
 
 double	FRAMETIME = 0;
+size_t	FPS = 0;
 
 // Display the help message
 void	displayHelp(char *executable_name) {
@@ -57,10 +58,16 @@ void	printVerbose(const string &message, bool newline) {
 }
 
 // Calculate the frametime of the program
-void	calculateFrametime() {
-	static double	lastTime = glfwGetTime();
-	double			currentTime = glfwGetTime();
+void getFrametime() {
+	static double last_time = glfwGetTime();
+	static int frame_count = 0;
 
-	FRAMETIME = currentTime - lastTime;
-	lastTime = currentTime;
+	double current_time = glfwGetTime();
+	frame_count++;
+	if (current_time - last_time >= 1.0) {
+		FRAMETIME = 1000.0/double(frame_count);
+		FPS = frame_count;
+		frame_count = 0;
+		last_time += 1.0;
+	}
 }

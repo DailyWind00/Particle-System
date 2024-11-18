@@ -46,6 +46,9 @@ int main(int argc, char **argv) {
 		while (!glfwWindowShouldClose(window)) {
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+			getFrametime();
+			const string title = "42 Particle-System by DailyWind - FPS : " + to_string(FPS);
+			glfwSetWindowTitle(window, title.c_str());
 		}
 		DestroyWindow(window);
 	}
