@@ -58,6 +58,7 @@ void	printVerbose(const string &message, bool newline) {
 }
 
 // Calculate the frametime of the program
+// Result are stored in the global variables FRAMETIME and FPS
 void getFrametime() {
 	static double last_time = glfwGetTime();
 	static int frame_count = 0;
