@@ -41,17 +41,27 @@ int main(int argc, char **argv) {
 
 	try {
 		GLFWwindow *window = CreateWindow();
+
+		// Tests to removes
 		testOpenCL();
-		// Main loop call
+		
 		while (!glfwWindowShouldClose(window)) {
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 			getFrametime();
-			const string title = "42 Particle-System by DailyWind - FPS : " + to_string(FPS);
-			glfwSetWindowTitle(window, title.c_str());
+			static size_t previousFPS = 0;
+			if (FPS != previousFPS) {
+				const string title = "42 Particle-System by DailyWind - FPS : " + to_string(FPS);
+				glfwSetWindowTitle(window, title.c_str());
+				previousFPS = FPS;
+			}
 			if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 				glfwSetWindowShouldClose(window, true);
 		}
+		// ---
+
+		// Main loop call
+
 		DestroyWindow(window);
 	}
 	catch(const std::exception& e) {
