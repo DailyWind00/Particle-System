@@ -49,6 +49,8 @@ int main(int argc, char **argv) {
 			getFrametime();
 			const string title = "42 Particle-System by DailyWind - FPS : " + to_string(FPS);
 			glfwSetWindowTitle(window, title.c_str());
+			if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+				glfwSetWindowShouldClose(window, true);
 		}
 		DestroyWindow(window);
 	}
