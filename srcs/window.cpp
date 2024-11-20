@@ -21,7 +21,7 @@ GLFWwindow	*CreateWindow() {
 
 	printVerbose("GLFW initialized");
 
-	const string title = "Particle-System";
+	const string title = "42 Particle-System by DailyWind";
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, title.c_str(), nullptr, nullptr);
 	if (!window) {
 		glfwTerminate();
