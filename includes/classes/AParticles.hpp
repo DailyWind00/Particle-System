@@ -31,5 +31,6 @@ class AParticles {
 		~AParticles();
 
 		/// Public functions
-
+		// virtual void	update() = 0;
+		// virtual void	draw()   = 0;
 };
