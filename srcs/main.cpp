@@ -37,14 +37,20 @@ int main(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	const string file_name(argv[argc - 1]);
+	size_t particleCount = 0;
+	stringstream ss(argv[argc - 1]);
+	ss >> particleCount;
+	if (ss.fail()) {
+		cout << BRed << "Invalid particle count\n" << ResetColor;
+		exit(EXIT_FAILURE);
+	}
 
 	try {
 		GLFWwindow *window = CreateWindow();
 
 		// Tests to removes
-		AParticles particles(1000);
-		
+		AParticles particles(particleCount);
+
 		while (!glfwWindowShouldClose(window)) {
 			glfwSwapBuffers(window);
 			glfwPollEvents();

@@ -6,7 +6,7 @@ size_t	FPS = 0;
 // Display the help message
 void	displayHelp(char *executable_name) {
 	cout << BGreen <<"=== 42 Particle-System by DailyWind ===\n" << ResetColor;
-	cout << "Usage: " << executable_name << " [options] <.obj file>\n";
+	cout << "Usage: " << executable_name << " [options] <ParticleCount>\n";
 	cout << "Options:\n";
 	cout << "\t-v, --verbose\t\t\tVerbose mode\n";
 	cout << "\t-s, --speed [value]\t\tSet the camera speed (default 1)\n";
