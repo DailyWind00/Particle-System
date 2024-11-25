@@ -3,6 +3,7 @@
 #include <array>
 #include "config.hpp"
 
+using namespace std;
 typedef array<float, 3> vec3;
 typedef array<float, 4> vec4;
 
