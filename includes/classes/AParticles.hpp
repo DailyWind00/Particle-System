@@ -29,9 +29,9 @@ class AParticles {
 
 	public:
 		AParticles(size_t ParticleCount);
-		virtual ~AParticles();
+		virtual ~AParticles() = 0;
 
 		/// Public functions
-		// virtual void	update() = 0;
-		// virtual void	draw()   = 0;
+		virtual void	update() = 0;
+		virtual void	draw()   = 0;
 };

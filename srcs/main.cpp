@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
 
 		// Tests to removes
 		{
-			AParticles particles(particleCount);
+			// AParticles particles(particleCount);
 
 			while (!glfwWindowShouldClose(window)) {
 				glfwSwapBuffers(window);

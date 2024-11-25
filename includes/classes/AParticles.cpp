@@ -12,7 +12,6 @@ AParticles::AParticles(size_t ParticleCount) {
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Allocate memory on the VRAM for the particles
 	cl_ulong globalMemSize = device.getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>();
@@ -53,7 +52,6 @@ cl::Device	AParticles::getGPU() const {
 
 // Create OpenCL context with OpenGL interoperability
 cl::Context	AParticles::createOpenCLContext() const {
-	cl_int err;
 	cl::Platform platform = cl::Platform::getDefault();
 
 	cl_context_properties properties[] = {
@@ -63,6 +61,7 @@ cl::Context	AParticles::createOpenCLContext() const {
 		0
 	};
 
+	cl_int err;
 	cl::Context context(CL_DEVICE_TYPE_GPU, properties, nullptr, nullptr, &err);
 	if (err != CL_SUCCESS)
 		throw std::runtime_error("Failed to create OpenCL context");
