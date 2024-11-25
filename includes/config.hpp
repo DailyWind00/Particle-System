@@ -17,6 +17,8 @@
 
 /// Custom includes
 # include "color.h"
+# include "AParticles.hpp"
+class AParticles;
 # include "Shader.hpp"
 class Shader;
 

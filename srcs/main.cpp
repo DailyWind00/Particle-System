@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
 		GLFWwindow *window = CreateWindow();
 
 		// Tests to removes
-		testOpenCL();
+		AParticles particles(1000);
 		
 		while (!glfwWindowShouldClose(window)) {
 			glfwSwapBuffers(window);
