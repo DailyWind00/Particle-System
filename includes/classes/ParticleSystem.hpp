@@ -17,7 +17,7 @@ typedef struct Particle {
 // This class is an interface to store particles datas.
 // The behavior of the particles will be defined in OpenCL kernel functions.
 // This class set a OpenCL context and a OpenCL queue.
-class Particles {
+class ParticleSystem {
 	private:
 		/// Private functions
 		cl::Device	getGPU() const;
@@ -28,8 +28,8 @@ class Particles {
 		cl::BufferGL	particles; // VRAM buffer
 
 	public:
-		Particles(size_t ParticleCount);
-		~Particles();
+		ParticleSystem(size_t ParticleCount);
+		~ParticleSystem();
 
 		/// Public functions
 		void	update();

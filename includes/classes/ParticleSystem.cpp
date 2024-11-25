@@ -1,7 +1,7 @@
-#include "Particles.hpp"
+#include "ParticleSystem.hpp"
 
 /// Constructors & Destructors
-Particles::Particles(size_t ParticleCount) {
+ParticleSystem::ParticleSystem(size_t ParticleCount) {
 	size_t bufferSize = ParticleCount * sizeof(Particle);
 	cl::Device device = getGPU();
 	cl::Context context = createOpenCLContext();
@@ -31,14 +31,14 @@ Particles::Particles(size_t ParticleCount) {
 	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, vbo);
 }
 
-Particles::~Particles() {
+ParticleSystem::~ParticleSystem() {
     glDeleteBuffers(1, &vbo);
 }
 /// ---
 
 
 /// Private functions
-cl::Device	Particles::getGPU() const {
+cl::Device	ParticleSystem::getGPU() const {
 	std::vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
 	cl::Platform platform = platforms[0];
@@ -51,7 +51,7 @@ cl::Device	Particles::getGPU() const {
 }
 
 // Create OpenCL context with OpenGL interoperability
-cl::Context	Particles::createOpenCLContext() const {
+cl::Context	ParticleSystem::createOpenCLContext() const {
 	cl::Platform platform = cl::Platform::getDefault();
 
 	cl_context_properties properties[] = {
@@ -74,11 +74,11 @@ cl::Context	Particles::createOpenCLContext() const {
 
 
 /// Public functions
-void	Particles::update() {
+void	ParticleSystem::update() {
 	// TODO
 }
 
-void	Particles::draw() {
+void	ParticleSystem::draw() {
 	// TODO
 }
 /// ---

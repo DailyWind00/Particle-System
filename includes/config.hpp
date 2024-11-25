@@ -18,8 +18,8 @@
 
 /// Custom includes
 # include "color.h"
-# include "Particles.hpp"
-class AParticles;
+# include "ParticleSystem.hpp"
+class ParticleSystem;
 # include "Shader.hpp"
 class Shader;
 
