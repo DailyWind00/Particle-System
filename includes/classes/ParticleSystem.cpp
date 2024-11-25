@@ -3,20 +3,41 @@
 /// Constructors & Destructors
 ParticleSystem::ParticleSystem(size_t ParticleCount) {
 	size_t bufferSize = ParticleCount * sizeof(Particle);
-	this->device = getGPU();
-	this->context = createOpenCLContext();
-
-	printVerbose("Using device : " + device.getInfo<CL_DEVICE_NAME>());
 
 	// Vertex buffer object
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
 
+    // Vertex array object
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    // Enable vertex attributes and set up their layout
+    glEnableVertexAttribArray(0); // Position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, position));
+
+    glEnableVertexAttribArray(1); // Velocity
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, velocity));
+
+    glEnableVertexAttribArray(2); // Color
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, color));
+
+    glEnableVertexAttribArray(3); // Life
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, life));
+
+    glBindVertexArray(0);
+
+	printVerbose("OpenGL buffers created");
+
 	// Allocate memory on the VRAM for the particles
+	this->device = getGPU();
+	this->context = createOpenCLContext();
+
 	cl_ulong globalMemSize = device.getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>();
 	cl_ulong maxAllocSize = device.getInfo<CL_DEVICE_MAX_MEM_ALLOC_SIZE>();
 
+	printVerbose("Using device : " + device.getInfo<CL_DEVICE_NAME>());
 	printVerbose("| Global memory size : " + to_string(globalMemSize / (1024 * 1024)) + " MB");
 	printVerbose("| Max allocation size : " + to_string(maxAllocSize / (1024 * 1024)) + " MB");
 	printVerbose("> Attempting Allocation of " + to_string(bufferSize / (1024 * 1024)) + " MB on the VRAM -> ", false);

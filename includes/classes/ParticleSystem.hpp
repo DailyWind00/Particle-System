@@ -21,6 +21,7 @@ class ParticleSystem {
 	private:
 		// OpenGL variables
 		GLuint				vbo;
+		GLuint				vao;
 
 		// OpenCL variables
 		cl::Device			device;
