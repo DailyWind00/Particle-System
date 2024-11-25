@@ -14,6 +14,7 @@
 # include <OpenCL/cl_gl.h>
 # include <fstream>
 # include <string.h>
+# include <GL/glx.h>
 
 /// Custom includes
 # include "color.h"

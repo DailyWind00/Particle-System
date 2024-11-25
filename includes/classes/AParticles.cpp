@@ -3,11 +3,9 @@
 /// Constructors & Destructors
 AParticles::AParticles(size_t ParticleCount) {
 	cl::Device device = getGPU();
-	cl::Context context(device);
+	cl::Context context = createOpenCLContext();
 
-	printVerbose("OpenCL context created");
 	printVerbose("Using device : " + device.getInfo<CL_DEVICE_NAME>());
-	this->context = context;
 
 	// Allocate memory on the VRAM for the particles
 	size_t bufferSize = ParticleCount * sizeof(Particle);
@@ -25,10 +23,17 @@ AParticles::AParticles(size_t ParticleCount) {
 	}
 	printVerbose(BGreen + "Memory allocated" + ResetColor);
 
-	this->particles = cl::Buffer(context, CL_MEM_READ_WRITE, bufferSize);
+	// Vertex buffer object
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
+
+	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, vbo);
 }
 
 AParticles::~AParticles() {
+    if (vbo)
+        glDeleteBuffers(1, &vbo);
 }
 /// ---
 
@@ -44,5 +49,25 @@ cl::Device	AParticles::getGPU() const {
 	cl::Device device = devices[0];
 
 	return device;
+}
+
+// Create OpenCL context with OpenGL interoperability
+cl::Context	AParticles::createOpenCLContext() const {
+	cl_int err;
+	cl::Platform platform = cl::Platform::getDefault();
+
+	cl_context_properties properties[] = {
+		CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
+		CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
+		CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
+		0
+	};
+
+	cl::Context context(CL_DEVICE_TYPE_GPU, properties, nullptr, nullptr, &err);
+	if (err != CL_SUCCESS)
+		throw std::runtime_error("Failed to create OpenCL context");
+	printVerbose("OpenCL context created");
+
+	return context;
 }
 /// ---

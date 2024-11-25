@@ -6,11 +6,12 @@
 typedef std::array<float, 3> vec3;
 typedef std::array<float, 4> vec4;
 
+// Data structure for a particle
 typedef struct Particle {
-	vec3	position;
-	vec3	velocity;
-	vec4	color;
-	float	life;
+	vec3	position = {0, 0, 0};
+	vec3	velocity = {0, 0, 0};
+	vec4	color    = {1, 1, 1, 1};
+	float	life     = 0;
 } Particle;
 
 // This class is an interface to store particles datas.
@@ -18,17 +19,17 @@ typedef struct Particle {
 // This class set a OpenCL context and a OpenCL queue.
 class AParticles {
 	private:
-		cl::Context context;
-
 		/// Private functions
 		cl::Device	getGPU() const;
+		cl::Context	createOpenCLContext() const;
 
 	protected:
-		cl::Buffer particles; // VRAM buffer
+		GLuint			vbo;
+		cl::BufferGL	particles; // VRAM buffer
 
 	public:
 		AParticles(size_t ParticleCount);
-		~AParticles();
+		virtual ~AParticles();
 
 		/// Public functions
 		// virtual void	update() = 0;

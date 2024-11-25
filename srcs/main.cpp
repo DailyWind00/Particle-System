@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 	stringstream ss(argv[argc - 1]);
 	ss >> particleCount;
 	if (ss.fail()) {
-		cout << BRed << "Invalid particle count\n" << ResetColor;
+		cerr << BRed << "Invalid particle count\n" << ResetColor;
 		exit(EXIT_FAILURE);
 	}
 
@@ -49,20 +49,22 @@ int main(int argc, char **argv) {
 		GLFWwindow *window = CreateWindow();
 
 		// Tests to removes
-		AParticles particles(particleCount);
+		{
+			AParticles particles(particleCount);
 
-		while (!glfwWindowShouldClose(window)) {
-			glfwSwapBuffers(window);
-			glfwPollEvents();
-			getFrametime();
-			static size_t previousFPS = 0;
-			if (FPS != previousFPS) {
-				const string title = "42 Particle-System by DailyWind - FPS : " + to_string(FPS);
-				glfwSetWindowTitle(window, title.c_str());
-				previousFPS = FPS;
+			while (!glfwWindowShouldClose(window)) {
+				glfwSwapBuffers(window);
+				glfwPollEvents();
+				getFrametime();
+				static size_t previousFPS = 0;
+				if (FPS != previousFPS) {
+					const string title = "42 Particle-System by DailyWind - FPS : " + to_string(FPS);
+					glfwSetWindowTitle(window, title.c_str());
+					previousFPS = FPS;
+				}
+				if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+					glfwSetWindowShouldClose(window, true);
 			}
-			if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-				glfwSetWindowShouldClose(window, true);
 		}
 		// ---
 
