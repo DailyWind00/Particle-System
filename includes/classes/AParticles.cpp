@@ -11,7 +11,7 @@ AParticles::AParticles(size_t ParticleCount) {
 
 	// Allocate memory on the VRAM for the particles
 	size_t bufferSize = ParticleCount * sizeof(Particle);
-	cl::Buffer particles(context, CL_MEM_READ_WRITE, bufferSize);
+	this->particles = cl::Buffer(context, CL_MEM_READ_WRITE, bufferSize);
 }
 
 AParticles::~AParticles() {

@@ -24,7 +24,7 @@ class AParticles {
 		cl::Device	getGPU() const;
 
 	protected:
-		// vector<Particle>	particles;
+		cl::Buffer particles; // VRAM buffer
 
 	public:
 		AParticles(size_t ParticleCount);
