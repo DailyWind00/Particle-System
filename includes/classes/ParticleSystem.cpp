@@ -64,10 +64,14 @@ ParticleSystem::~ParticleSystem() {
 cl::Device	ParticleSystem::getGPU() const {
 	std::vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
+	if (platforms.empty())
+		throw std::runtime_error("No OpenCL platforms found");
 	cl::Platform platform = platforms[0];
 
 	std::vector<cl::Device> devices;
 	platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
+	if (devices.empty())
+		throw std::runtime_error("No OpenCL devices found");
 	cl::Device device = devices[0];
 
 	return device;
