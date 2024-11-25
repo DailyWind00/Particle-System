@@ -2,13 +2,19 @@
 
 /// Constructors & Destructors
 AParticles::AParticles(size_t ParticleCount) {
+	size_t bufferSize = ParticleCount * sizeof(Particle);
 	cl::Device device = getGPU();
 	cl::Context context = createOpenCLContext();
 
 	printVerbose("Using device : " + device.getInfo<CL_DEVICE_NAME>());
 
+	// Vertex buffer object
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	// Allocate memory on the VRAM for the particles
-	size_t bufferSize = ParticleCount * sizeof(Particle);
 	cl_ulong globalMemSize = device.getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>();
 	cl_ulong maxAllocSize = device.getInfo<CL_DEVICE_MAX_MEM_ALLOC_SIZE>();
 
@@ -23,17 +29,11 @@ AParticles::AParticles(size_t ParticleCount) {
 	}
 	printVerbose(BGreen + "Memory allocated" + ResetColor);
 
-	// Vertex buffer object
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
-
 	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, vbo);
 }
 
 AParticles::~AParticles() {
-    if (vbo)
-        glDeleteBuffers(1, &vbo);
+    glDeleteBuffers(1, &vbo);
 }
 /// ---
 
