@@ -1,22 +1,24 @@
 #pragma once
 
+/// Defines
+# define CL_HPP_TARGET_OPENCL_VERSION 300
+# define COLOR_HEADER_CXX
+
 /// System includes
 # include <iostream>
 # include <glad/glad.h>
 # include <GLFW/glfw3.h>
 # include <stb/stb_image.h>
 # include <glm/glm.hpp>
-# include <CL/cl.h>
+# include <OpenCL/opencl.hpp>
+# include <OpenCL/cl_gl.h>
 # include <fstream>
 # include <string.h>
 
 /// Custom includes
-# define COLOR_HEADER_CXX
 # include "color.h"
 # include "Shader.hpp"
 class Shader;
-
-/// Defines
 
 /// Global variables
 using namespace std;
