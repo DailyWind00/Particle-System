@@ -15,7 +15,7 @@ add_executable(Particle-System
 	srcs/flags.cpp
 	srcs/utils.cpp
 	includes/classes/Shader.cpp
-	includes/classes/AParticles.cpp
+	includes/classes/Particles.cpp
 	dependencies/stb/stb_config.cpp
 	dependencies/glad/glad.c
 )
