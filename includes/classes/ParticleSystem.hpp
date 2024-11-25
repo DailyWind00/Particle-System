@@ -19,13 +19,18 @@ typedef struct Particle {
 // This class set a OpenCL context and a OpenCL queue.
 class ParticleSystem {
 	private:
+		// OpenGL variables
+		GLuint				vbo;
+
+		// OpenCL variables
+		cl::Device			device;
+		cl::Context			context;
+		cl::CommandQueue	queue;
+		cl::BufferGL		particles; // VRAM buffer
+
 		/// Private functions
 		cl::Device	getGPU() const;
 		cl::Context	createOpenCLContext() const;
-
-	protected:
-		GLuint			vbo;
-		cl::BufferGL	particles; // VRAM buffer
 
 	public:
 		ParticleSystem(size_t ParticleCount);

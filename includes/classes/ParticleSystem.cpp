@@ -3,8 +3,8 @@
 /// Constructors & Destructors
 ParticleSystem::ParticleSystem(size_t ParticleCount) {
 	size_t bufferSize = ParticleCount * sizeof(Particle);
-	cl::Device device = getGPU();
-	cl::Context context = createOpenCLContext();
+	this->device = getGPU();
+	this->context = createOpenCLContext();
 
 	printVerbose("Using device : " + device.getInfo<CL_DEVICE_NAME>());
 
