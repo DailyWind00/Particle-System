@@ -3,8 +3,8 @@
 #include <array>
 #include "config.hpp"
 
-typedef std::array<float, 3> vec3;
-typedef std::array<float, 4> vec4;
+typedef array<float, 3> vec3;
+typedef array<float, 4> vec4;
 
 // Data structure for a particle
 typedef struct Particle {
