@@ -51,8 +51,10 @@ GLFWwindow		*CreateWindow();
 void			DestroyWindow(GLFWwindow *window);
 
 // routine.cpp
+void			Rendering(GLFWwindow *window);
 
 // events.cpp
+void			handleEvents(GLFWwindow *window, Shader &shaders);
 
 // flags.cpp
 int				checkFlags(int argc, char **argv);

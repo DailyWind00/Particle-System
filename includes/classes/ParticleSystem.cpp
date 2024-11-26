@@ -2,7 +2,10 @@
 
 /// Constructors & Destructors
 ParticleSystem::ParticleSystem(size_t ParticleCount) {
+	printVerbose("Creating Particle System");
+
 	size_t bufferSize = ParticleCount * sizeof(Particle);
+	this->particleCount = ParticleCount;
 
 	// Vertex buffer object
 	glGenBuffers(1, &vbo);
@@ -50,11 +53,12 @@ ParticleSystem::ParticleSystem(size_t ParticleCount) {
 	printVerbose(BGreen + "Memory allocated" + ResetColor);
 
 	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, vbo);
+
+	printVerbose("Particle System created");
 }
 
 ParticleSystem::~ParticleSystem() {
     glDeleteBuffers(1, &vbo);
-	glDeleteVertexArrays(1, &vao);
 	printVerbose("OpenGL buffers deleted");
 }
 /// ---
@@ -106,6 +110,8 @@ void	ParticleSystem::update() {
 }
 
 void	ParticleSystem::draw() {
-	// TODO
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glDrawArrays(GL_POINTS, 0, particleCount);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 /// ---

@@ -9,7 +9,7 @@ typedef array<float, 4> vec4;
 
 // Data structure for a particle
 typedef struct Particle {
-	vec3	position = {0, 0, 0};
+	vec3	position = {50, 50, 50};
 	vec3	velocity = {0, 0, 0};
 	vec4	color    = {1, 1, 1, 1};
 	float	life     = 0;
@@ -29,6 +29,9 @@ class ParticleSystem {
 		cl::Context			context;
 		cl::CommandQueue	queue;
 		cl::BufferGL		particles; // VRAM buffer
+
+		// Other variables
+		size_t				particleCount;
 
 		/// Private functions
 		cl::Device	getGPU() const;
