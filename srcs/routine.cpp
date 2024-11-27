@@ -21,7 +21,7 @@ void	Rendering(GLFWwindow *window, size_t particleCount) {
 	glEnable(GL_DEPTH_TEST);
 
 	vector<string> VkernelProgramPaths = {
-		"./srcs/kernels/particle.cl"
+		"./srcs/kernels/test.cl"
 	};
 	ParticleSystem particles("test", particleCount, VkernelProgramPaths);
 
