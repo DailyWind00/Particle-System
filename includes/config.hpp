@@ -51,7 +51,7 @@ GLFWwindow		*CreateWindow();
 void			DestroyWindow(GLFWwindow *window);
 
 // routine.cpp
-void			Rendering(GLFWwindow *window);
+void			Rendering(GLFWwindow *window, ParticleSystem &particles);
 
 // events.cpp
 void			handleEvents(GLFWwindow *window, Shader &shaders);

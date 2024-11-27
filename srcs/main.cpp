@@ -28,9 +28,10 @@ int main(int argc, char **argv) {
 
 	try {
 		GLFWwindow *window = CreateWindow();
-
-		Rendering(window);
-
+		{ // Scope to destroy the particleSystem before the window
+			ParticleSystem particles(particleCount);
+			Rendering(window, particles);
+		}
 		DestroyWindow(window);
 	}
 	catch(const std::exception& e) {

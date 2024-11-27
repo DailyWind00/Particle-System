@@ -15,11 +15,9 @@ static void program_loop(GLFWwindow *window, Shader &shaders, ParticleSystem &pa
 }
 
 // Will call the program loop
-void	Rendering(GLFWwindow *window) {
+void	Rendering(GLFWwindow *window, ParticleSystem &particles) {
 	glClearColor(0.02f, 0.02f, 0.175f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
-
-	ParticleSystem particles(1000);
 
 	Shader shaders;
 	shaders.add_shader(
