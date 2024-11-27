@@ -6,7 +6,7 @@ all:
 	@cmake -B build
 	@make -C build -j
 	@mv build/Particle-System .
-	@echo "$(GREEN)Particle-System is ready to use : ./Particle-System [flags]$(RESET)"
+	@echo "$(GREEN)Particle-System is ready to use : ./Particle-System [options] <ParticleCount> $(RESET)"
 
 clean:
 	@rm -rf build
