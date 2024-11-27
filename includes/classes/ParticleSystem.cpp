@@ -7,31 +7,7 @@ ParticleSystem::ParticleSystem(size_t ParticleCount) {
 	size_t bufferSize = ParticleCount * sizeof(Particle);
 	this->particleCount = ParticleCount;
 
-	// Vertex buffer object
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
-
-    // Vertex array object
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    // Enable vertex attributes and set up their layout
-    glEnableVertexAttribArray(0); // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, position));
-
-    glEnableVertexAttribArray(1); // Velocity
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, velocity));
-
-    glEnableVertexAttribArray(2); // Color
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, color));
-
-    glEnableVertexAttribArray(3); // Life
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, life));
-
-    glBindVertexArray(0);
-
-	printVerbose("OpenGL buffers created");
+	createOpenGLBuffers(bufferSize);
 
 	// Allocate memory on the VRAM for the particles
 	this->device = getGPU();
@@ -52,14 +28,14 @@ ParticleSystem::ParticleSystem(size_t ParticleCount) {
 	}
 	printVerbose(BGreen + "Memory allocated" + ResetColor);
 
-	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, vbo);
+	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO);
 
 	printVerbose("Particle System created");
 }
 
 ParticleSystem::~ParticleSystem() {
-    glDeleteBuffers(1, &vbo);
-	glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &VBO);
+	glDeleteVertexArrays(1, &VAO);
 	printVerbose("OpenGL buffers deleted");
 }
 /// ---
@@ -101,6 +77,37 @@ cl::Context	ParticleSystem::createOpenCLContext() const {
 
 	return context;
 }
+
+// Create OpenGL buffers for the particles
+void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
+	printVerbose("> Creating OpenGL buffers -> ", false);
+
+    // Vertex array object
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+	// Vertex buffer object
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
+
+    // Enable vertex attributes and set up their layout
+    glEnableVertexAttribArray(0); // Position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, position));
+
+    glEnableVertexAttribArray(1); // Velocity
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, velocity));
+
+    glEnableVertexAttribArray(2); // Color
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, color));
+
+    glEnableVertexAttribArray(3); // Life
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, life));
+
+    glBindVertexArray(0);
+
+	printVerbose(BGreen + "Buffers created" + ResetColor);
+}
 /// ---
 
 
@@ -111,7 +118,7 @@ void	ParticleSystem::update() {
 }
 
 void	ParticleSystem::draw() {
-	glBindVertexArray(vao);
+	glBindVertexArray(VAO);
 	glDrawArrays(GL_POINTS, 0, particleCount);
 	glBindVertexArray(0);
 }

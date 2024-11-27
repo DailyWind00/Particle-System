@@ -21,8 +21,8 @@ typedef struct Particle {
 class ParticleSystem {
 	private:
 		// OpenGL variables
-		GLuint				vbo;
-		GLuint				vao;
+		GLuint				VBO;
+		GLuint				VAO;
 
 		// OpenCL variables
 		cl::Device			device;
@@ -36,6 +36,7 @@ class ParticleSystem {
 		/// Private functions
 		cl::Device	getGPU() const;
 		cl::Context	createOpenCLContext() const;
+		void		createOpenGLBuffers(size_t bufferSize);
 
 	public:
 		ParticleSystem(size_t ParticleCount);
