@@ -2,6 +2,7 @@
 
 /// Defines
 # define CL_HPP_TARGET_OPENCL_VERSION 300
+# define CL_HPP_ENABLE_EXCEPTIONS
 # define COLOR_HEADER_CXX
 
 /// System includes

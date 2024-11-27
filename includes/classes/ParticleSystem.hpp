@@ -27,6 +27,7 @@ class ParticleSystem {
 		cl::Device			device;
 		cl::Context			context;
 		cl::CommandQueue	queue;
+		cl::Program			program;
 		cl::Kernel			kernel;
 		cl::BufferGL		particles; // VRAM buffer
 

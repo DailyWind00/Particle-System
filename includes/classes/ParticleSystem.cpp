@@ -50,16 +50,6 @@ void	ParticleSystem::createOpenCLContext(const string &kernelProgramPath) {
 		0
 	};
 
-	cl_int err;
-	this->context = cl::Context(CL_DEVICE_TYPE_GPU, properties, nullptr, nullptr, &err);
-	if (err != CL_SUCCESS) {
-		printVerbose(BRed + "Error" + ResetColor);
-		throw std::runtime_error("Failed to create OpenCL context");
-	}
-
-	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
-	this->queue = cl::CommandQueue(context, device);
-
 	// Load the kernel program
 	ifstream file(kernelProgramPath);
 	stringstream kernelSource;
@@ -72,7 +62,17 @@ void	ParticleSystem::createOpenCLContext(const string &kernelProgramPath) {
 	while (getline(file, line))
 		kernelSource << line << '\n';
 
-	this->kernel = cl::Kernel(cl::Program(context, kernelSource.str(), false), "updateParticle");
+	try {
+		this->context = cl::Context(CL_DEVICE_TYPE_GPU, properties, nullptr, nullptr);
+		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
+		this->queue = cl::CommandQueue(context, device, 0);
+		this->program = cl::Program(context, kernelSource.str(), false);
+		this->kernel = cl::Kernel(this->program, "updateParticle");
+	}
+	catch (cl::Error &e) {
+		printVerbose(BRed + "Error" + ResetColor);
+		throw std::runtime_error("OpenCL error : " + (string)e.what() + " (" + to_string(e.err()) + ")");
+	}
 	
 	printVerbose(BGreen + "Context created" + ResetColor);
 	printVerbose("Using device: " + device.getInfo<CL_DEVICE_NAME>());
