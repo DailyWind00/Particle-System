@@ -11,7 +11,6 @@ typedef array<float, 4> vec4;
 typedef struct Particle {
 	vec3	position = {50, 50, 50};
 	vec3	velocity = {0, 0, 0};
-	vec4	color    = {1, 1, 1, 1};
 	float	life     = 0;
 } Particle;
 
