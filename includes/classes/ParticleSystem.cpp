@@ -89,7 +89,7 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
 	// Vertex buffer object
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, bufferSize * sizeof(Particle), nullptr, GL_DYNAMIC_DRAW); // Allocate memory (but don't fill it)
 
     // Enable vertex attributes and set up their layout
     glEnableVertexAttribArray(0); // Position
