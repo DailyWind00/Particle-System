@@ -1,14 +1,19 @@
 #include "ParticleSystem.hpp"
 
 /// Constructors & Destructors
-ParticleSystem::ParticleSystem(size_t ParticleCount, const string &kernelProgramPath) {
+
+// Create a particle system with a given name, a number of particles and a list of OpenCL kernel programs
+// The kernel programs are loaded from the files in VkernelProgramPaths
+// The kernel program name must match the SystemName
+ParticleSystem::ParticleSystem(const string &SystemName, size_t ParticleCount, const vector<string> &VkernelProgramPaths) {
 	printVerbose("Creating Particle System");
 
 	size_t bufferSize = ParticleCount * sizeof(Particle);
 	this->particleCount = ParticleCount;
+	this->systemName = SystemName;
 
 	createOpenGLBuffers(bufferSize);
-	createOpenCLContext(kernelProgramPath);
+	createOpenCLContext(VkernelProgramPaths);
 
 	printVerbose("Particle System created");
 }
@@ -23,7 +28,7 @@ ParticleSystem::~ParticleSystem() {
 
 /// Private functions
 
-static const string CLstrerrno(cl_int error) {
+const string ParticleSystem::CLstrerrno(cl_int error) {
 	switch(error) {
 		// run-time and JIT compiler errors
 		case 0: return "CL_SUCCESS";
@@ -99,8 +104,39 @@ static const string CLstrerrno(cl_int error) {
 	}
 }
 
+// Build a OpenCL program from files in VkernelProgramPaths
+cl::Program ParticleSystem::buildProgram(const vector<string> &VkernelProgramPaths) {
+	cl::Program::Sources sources;
+
+	// Load the kernel program from the files
+	for (const string &kernelProgramPath : VkernelProgramPaths) {
+		ifstream file(kernelProgramPath);
+		stringstream kernelSource;
+		string line;
+
+		if (!file.is_open()) {
+			printVerbose(BRed + "Error" + ResetColor);
+			throw runtime_error("Failed to open file " + kernelProgramPath + " : " + (string)strerror(errno));
+		}
+		while (getline(file, line))
+			kernelSource << line << '\n';
+
+		sources.push_back({kernelSource.str(), strlen(kernelSource.str().c_str())});
+	}
+
+    cl::Program program = cl::Program(context, sources);
+    cl_int err = program.build(device);
+    if (err != CL_SUCCESS) {
+        std::string buildLog = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);
+		printVerbose(BRed + "Error" + ResetColor);
+        throw std::runtime_error("OpenCL error : " + CLstrerrno(err) + " (" + buildLog + ")");
+    }
+
+	return program;
+}
+
 // Create OpenCL context with OpenGL interoperability
-void	ParticleSystem::createOpenCLContext(const string &kernelProgramPath) {
+void	ParticleSystem::createOpenCLContext(const vector<string> &VkernelProgramPaths) {
 	printVerbose("> Creating OpenCL context -> ", false);
 
 	std::vector<cl::Platform> Vplatforms;
@@ -126,24 +162,12 @@ void	ParticleSystem::createOpenCLContext(const string &kernelProgramPath) {
 		0
 	};
 
-	// Load the kernel program
-	ifstream file(kernelProgramPath);
-	stringstream kernelSource;
-	string line;
-
-	if (!file.is_open()) {
-		printVerbose(BRed + "Error" + ResetColor);
-		throw runtime_error("Failed to open file " + kernelProgramPath + " : " + (string)strerror(errno));
-	}
-	while (getline(file, line))
-		kernelSource << line << '\n';
-
 	try {
 		this->context = cl::Context(CL_DEVICE_TYPE_GPU, properties, nullptr, nullptr);
 		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
 		this->queue = cl::CommandQueue(context, device, 0);
-		this->program = cl::Program(context, kernelSource.str(), false);
-		this->kernel = cl::Kernel(this->program, "updateParticle");
+		this->program = buildProgram(VkernelProgramPaths);
+		this->kernel = cl::Kernel(this->program, this->systemName);
 	}
 	catch (cl::Error &e) {
 		printVerbose(BRed + "Error" + ResetColor);

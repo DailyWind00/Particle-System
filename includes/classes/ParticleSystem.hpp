@@ -27,20 +27,23 @@ class ParticleSystem {
 		cl::Device			device;
 		cl::Context			context;
 		cl::CommandQueue	queue;
-		cl::Program			program;
+		cl::Program			program; // May change to vector<cl::Program> if multiple kernels
 		cl::Kernel			kernel;
 		cl::BufferGL		particles; // VRAM buffer
 
 		// Other variables
 		size_t				particleCount;
+		string				systemName;
 
 		/// Private functions
 
-		void		createOpenGLBuffers(size_t bufferSize);
-		void		createOpenCLContext(const string &kernelProgramPath);
+		const string	CLstrerrno(cl_int error);
+		cl::Program		buildProgram(const vector<string> &VkernelProgramPaths);
+		void			createOpenGLBuffers(size_t bufferSize);
+		void			createOpenCLContext(const vector<string> &VkernelProgramPaths);
 
 	public:
-		ParticleSystem(size_t ParticleCount, const string &kernelProgramPath);
+		ParticleSystem(const string &SystemName, size_t ParticleCount, const vector<string> &VkernelProgramPaths);
 		~ParticleSystem();
 
 		/// Public functions
