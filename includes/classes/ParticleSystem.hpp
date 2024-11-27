@@ -34,7 +34,7 @@ class ParticleSystem {
 		size_t				particleCount;
 
 		/// Private functions
-		cl::Device	getGPU() const;
+
 		void		createOpenCLContext();
 		void		createOpenGLBuffers(size_t bufferSize);
 
@@ -43,6 +43,7 @@ class ParticleSystem {
 		~ParticleSystem();
 
 		/// Public functions
+
 		void	update();
 		void	draw();
 };

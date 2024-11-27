@@ -22,28 +22,26 @@ ParticleSystem::~ParticleSystem() {
 
 
 /// Private functions
-cl::Device	ParticleSystem::getGPU() const {
-	std::vector<cl::Platform> platforms;
-	cl::Platform::get(&platforms);
-	if (platforms.empty())
-		throw std::runtime_error("No OpenCL platforms found");
-	cl::Platform platform = platforms[0];
-
-	std::vector<cl::Device> devices;
-	platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
-	if (devices.empty())
-		throw std::runtime_error("No OpenCL devices found");
-	cl::Device device = devices[0];
-
-	return device;
-}
 
 // Create OpenCL context with OpenGL interoperability
 void	ParticleSystem::createOpenCLContext() {
 	printVerbose("> Creating OpenCL context -> ", false);
 
-	cl::Platform platform = cl::Platform::getDefault();
-	this->device = getGPU();
+	std::vector<cl::Platform> Vplatforms;
+	cl::Platform::get(&Vplatforms);
+	if (Vplatforms.empty()) {
+		printVerbose(BRed + "Error" + ResetColor);
+		throw std::runtime_error("No OpenCL platforms found");
+	}
+	cl::Platform platform = Vplatforms[0];
+
+	std::vector<cl::Device> Vdevices;
+	platform.getDevices(CL_DEVICE_TYPE_GPU, &Vdevices);
+	if (Vdevices.empty()) {
+		printVerbose(BRed + "Error" + ResetColor);
+		throw std::runtime_error("No OpenCL devices found");
+	}
+	this->device = Vdevices[0];
 
 	cl_context_properties properties[] = {
 		CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
@@ -62,6 +60,7 @@ void	ParticleSystem::createOpenCLContext() {
 	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
 	
 	printVerbose(BGreen + "Context created" + ResetColor);
+	printVerbose("Using device: " + device.getInfo<CL_DEVICE_NAME>());
 }
 
 // Create OpenGL buffers for the particles
