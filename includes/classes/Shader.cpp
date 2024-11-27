@@ -13,6 +13,7 @@ Shader::~Shader() {
 		remove_shader(it->first);
 	}
 	shaders.clear();
+	printVerbose("Shader class deleted");
 }
 /// ---
 

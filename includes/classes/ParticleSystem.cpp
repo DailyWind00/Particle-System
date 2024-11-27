@@ -16,7 +16,7 @@ ParticleSystem::ParticleSystem(size_t ParticleCount) {
 ParticleSystem::~ParticleSystem() {
     glDeleteBuffers(1, &VBO);
 	glDeleteVertexArrays(1, &VAO);
-	printVerbose("OpenGL buffers deleted");
+	printVerbose("Particle System deleted");
 }
 /// ---
 
