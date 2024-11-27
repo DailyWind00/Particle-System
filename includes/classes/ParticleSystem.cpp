@@ -8,27 +8,7 @@ ParticleSystem::ParticleSystem(size_t ParticleCount) {
 	this->particleCount = ParticleCount;
 
 	createOpenGLBuffers(bufferSize);
-
-	// Allocate memory on the VRAM for the particles
-	this->device = getGPU();
-	this->context = createOpenCLContext();
-
-	cl_ulong globalMemSize = device.getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>();
-	cl_ulong maxAllocSize = device.getInfo<CL_DEVICE_MAX_MEM_ALLOC_SIZE>();
-
-	printVerbose("Using device : " + device.getInfo<CL_DEVICE_NAME>());
-	printVerbose("| Global memory size : " + to_string(globalMemSize / (1024 * 1024)) + " MB");
-	printVerbose("| Max allocation size : " + to_string(maxAllocSize / (1024 * 1024)) + " MB");
-	printVerbose("> Attempting Allocation of " + to_string(bufferSize / (1024 * 1024)) + " MB on the VRAM -> ", false);
-
-	if (bufferSize > maxAllocSize) {
-		printVerbose(BRed + "Error" + ResetColor);
-		printVerbose(BCyan + "Tips : Try to decrease the number of particles" + ResetColor);
-		throw runtime_error("Failed to allocate memory on the VRAM : Buffer size is too big");
-	}
-	printVerbose(BGreen + "Memory allocated" + ResetColor);
-
-	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO);
+	createOpenCLContext();
 
 	printVerbose("Particle System created");
 }
@@ -59,8 +39,11 @@ cl::Device	ParticleSystem::getGPU() const {
 }
 
 // Create OpenCL context with OpenGL interoperability
-cl::Context	ParticleSystem::createOpenCLContext() const {
+void	ParticleSystem::createOpenCLContext() {
+	printVerbose("> Creating OpenCL context -> ", false);
+
 	cl::Platform platform = cl::Platform::getDefault();
+	this->device = getGPU();
 
 	cl_context_properties properties[] = {
 		CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
@@ -70,12 +53,15 @@ cl::Context	ParticleSystem::createOpenCLContext() const {
 	};
 
 	cl_int err;
-	cl::Context context(CL_DEVICE_TYPE_GPU, properties, nullptr, nullptr, &err);
-	if (err != CL_SUCCESS)
+	this->context = cl::Context(CL_DEVICE_TYPE_GPU, properties, nullptr, nullptr, &err);
+	if (err != CL_SUCCESS) {
+		printVerbose(BRed + "Error" + ResetColor);
 		throw std::runtime_error("Failed to create OpenCL context");
-	printVerbose("OpenCL context created");
+	}
 
-	return context;
+	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
+	
+	printVerbose(BGreen + "Context created" + ResetColor);
 }
 
 // Create OpenGL buffers for the particles
@@ -119,7 +105,7 @@ void	ParticleSystem::update() {
 
 void	ParticleSystem::draw() {
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_POINTS, 0, particleCount);
+	glDrawArrays(GL_POINTS, 0, particleCount * sizeof(Particle));
 	glBindVertexArray(0);
 }
 /// ---

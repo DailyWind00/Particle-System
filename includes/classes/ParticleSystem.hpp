@@ -35,7 +35,7 @@ class ParticleSystem {
 
 		/// Private functions
 		cl::Device	getGPU() const;
-		cl::Context	createOpenCLContext() const;
+		void		createOpenCLContext();
 		void		createOpenGLBuffers(size_t bufferSize);
 
 	public:
