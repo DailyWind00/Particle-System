@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 	try {
 		GLFWwindow *window = CreateWindow();
 		{ // Scope to destroy the particleSystem before the window
-			ParticleSystem particles(particleCount);
+			ParticleSystem particles(particleCount, "./srcs/kernels/particle.cl");
 			Rendering(window, particles);
 		}
 		DestroyWindow(window);

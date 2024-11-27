@@ -1,14 +1,14 @@
 #include "ParticleSystem.hpp"
 
 /// Constructors & Destructors
-ParticleSystem::ParticleSystem(size_t ParticleCount) {
+ParticleSystem::ParticleSystem(size_t ParticleCount, const string &kernelProgramPath) {
 	printVerbose("Creating Particle System");
 
 	size_t bufferSize = ParticleCount * sizeof(Particle);
 	this->particleCount = ParticleCount;
 
 	createOpenGLBuffers(bufferSize);
-	createOpenCLContext();
+	createOpenCLContext(kernelProgramPath);
 
 	printVerbose("Particle System created");
 }
@@ -24,7 +24,7 @@ ParticleSystem::~ParticleSystem() {
 /// Private functions
 
 // Create OpenCL context with OpenGL interoperability
-void	ParticleSystem::createOpenCLContext() {
+void	ParticleSystem::createOpenCLContext(const string &kernelProgramPath) {
 	printVerbose("> Creating OpenCL context -> ", false);
 
 	std::vector<cl::Platform> Vplatforms;
@@ -58,6 +58,21 @@ void	ParticleSystem::createOpenCLContext() {
 	}
 
 	this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
+	this->queue = cl::CommandQueue(context, device);
+
+	// Load the kernel program
+	ifstream file(kernelProgramPath);
+	stringstream kernelSource;
+	string line;
+
+	if (!file.is_open()) {
+		printVerbose(BRed + "Error" + ResetColor);
+		throw runtime_error("Failed to open file " + kernelProgramPath + " : " + (string)strerror(errno));
+	}
+	while (getline(file, line))
+		kernelSource << line << '\n';
+
+	this->kernel = cl::Kernel(cl::Program(context, kernelSource.str(), false), "updateParticle");
 	
 	printVerbose(BGreen + "Context created" + ResetColor);
 	printVerbose("Using device: " + device.getInfo<CL_DEVICE_NAME>());

@@ -27,6 +27,7 @@ class ParticleSystem {
 		cl::Device			device;
 		cl::Context			context;
 		cl::CommandQueue	queue;
+		cl::Kernel			kernel;
 		cl::BufferGL		particles; // VRAM buffer
 
 		// Other variables
@@ -34,11 +35,11 @@ class ParticleSystem {
 
 		/// Private functions
 
-		void		createOpenCLContext();
 		void		createOpenGLBuffers(size_t bufferSize);
+		void		createOpenCLContext(const string &kernelProgramPath);
 
 	public:
-		ParticleSystem(size_t ParticleCount);
+		ParticleSystem(size_t ParticleCount, const string &kernelProgramPath);
 		~ParticleSystem();
 
 		/// Public functions

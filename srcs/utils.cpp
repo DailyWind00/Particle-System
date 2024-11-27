@@ -25,14 +25,6 @@ void	displayCommands() {
 	// TODO
 }
 
-// Open the file in read mode and return the ifstream object, throw an error if the file can't be opened
-ifstream	openReadFile(const string &filename) {
-	ifstream file(filename);
-	if (!file.is_open())
-		throw runtime_error("Failed to open file : " + (string)strerror(errno));
-	return file;
-}
-
 // Load the texture using stb_image and return the data, throw an error if the texture can't be loaded
 unsigned char *stbi_loader(const string &filename, int &width, int &height, int &nrChannels) {
 	printVerbose("> Loading texture " + filename + " -> ", false);
