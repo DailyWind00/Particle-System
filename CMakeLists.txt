@@ -25,7 +25,7 @@ target_include_directories(Particle-System PRIVATE dependencies)
 target_include_directories(Particle-System PRIVATE includes)
 target_include_directories(Particle-System PRIVATE includes/classes)
 
-target_compile_options(Particle-System PRIVATE -Wall -Wextra -Werror -O3 -g -fPIE)
+target_compile_options(Particle-System PRIVATE -Wall -Wextra -O3 -g -fPIE)
 
 target_link_libraries(Particle-System OpenGL::GL glfw)
 target_link_libraries(Particle-System ${OpenCL_LIBRARIES})
