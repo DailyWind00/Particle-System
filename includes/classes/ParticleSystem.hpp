@@ -23,12 +23,13 @@ class ParticleSystem {
 		GLuint				VBO;
 		GLuint				VAO;
 
-		// OpenCL variables
+		// OpenCL variables (may be in vector for multiple kernels)
+		cl::Platform		platform;
 		cl::Device			device;
 		cl::Context			context;
-		cl::CommandQueue	queue;
-		cl::Program			program; // May change to vector<cl::Program> if multiple kernels
+		cl::Program			program;
 		cl::Kernel			kernel;
+		cl::CommandQueue	queue;
 		cl::BufferGL		particles; // VRAM buffer
 
 		// Other variables
@@ -37,6 +38,9 @@ class ParticleSystem {
 		/// Private functions
 
 		const string	CLstrerrno(cl_int error);
+		cl::Platform	getPlatform();
+		cl::Device		getDevice(const cl::Platform &platform);
+		cl::Context		createContext(const cl::Device &device, const cl::Platform &platform);
 		cl::Program		buildProgram(const vector<string> &VkernelProgramPaths);
 		void			createOpenGLBuffers(size_t bufferSize);
 		void			createOpenCLContext(const vector<string> &VkernelProgramPaths);

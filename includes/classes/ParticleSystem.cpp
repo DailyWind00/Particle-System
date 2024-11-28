@@ -28,7 +28,8 @@ ParticleSystem::~ParticleSystem() {
 
 /// Private functions
 
-const string ParticleSystem::CLstrerrno(cl_int error) {
+// Get the string representation of an OpenCL error
+const string	ParticleSystem::CLstrerrno(cl_int error) {
 	switch(error) {
 		// run-time and JIT compiler errors
 		case 0: return "CL_SUCCESS";
@@ -104,8 +105,41 @@ const string ParticleSystem::CLstrerrno(cl_int error) {
 	}
 }
 
+// Get the first OpenCL platform
+cl::Platform	ParticleSystem::getPlatform() {
+	std::vector<cl::Platform> platforms;
+	cl::Platform::get(&platforms);
+	if (platforms.empty())
+		throw std::runtime_error("No OpenCL platforms found");
+
+	return platforms.front();
+}
+
+// Get the first GPU device from the platform
+cl::Device	ParticleSystem::getDevice(const cl::Platform &platform) {
+	std::vector<cl::Device> devices;
+	platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
+	if (devices.empty())
+		throw std::runtime_error("No OpenCL devices found");
+
+	return devices.front();
+}
+
+// Create an OpenCL context with OpenGL interoperability
+cl::Context	ParticleSystem::createContext(const cl::Device &device, const cl::Platform &platform) {
+	cl_context_properties properties[] = { // Interoperability with OpenGL
+		CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
+		CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
+		CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
+		0
+	};
+
+	cl::Context context(device, properties);
+	return context;
+}
+
 // Build a OpenCL program from files in VkernelProgramPaths
-cl::Program ParticleSystem::buildProgram(const vector<string> &VkernelProgramPaths) {
+cl::Program	ParticleSystem::buildProgram(const vector<string> &VkernelProgramPaths) {
 	cl::Program::Sources sources;
 
 	// Load the kernel program from the files
@@ -126,12 +160,7 @@ cl::Program ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 	}
 
     cl::Program program = cl::Program(context, sources);
-    cl_int err = program.build(device);
-    if (err != CL_SUCCESS) {
-        std::string buildLog = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);
-		printVerbose(BRed + "Error" + ResetColor);
-        throw std::runtime_error("OpenCL error : " + CLstrerrno(err) + " (" + buildLog + ")");
-    }
+    program.build(device);
 
 	return program;
 }
@@ -140,35 +169,14 @@ cl::Program ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 void	ParticleSystem::createOpenCLContext(const vector<string> &VkernelProgramPaths) {
 	printVerbose("> Creating OpenCL context -> ", false);
 
-	std::vector<cl::Platform> Vplatforms;
-	cl::Platform::get(&Vplatforms);
-	if (Vplatforms.empty()) {
-		printVerbose(BRed + "Error" + ResetColor);
-		throw std::runtime_error("No OpenCL platforms found");
-	}
-	cl::Platform platform = Vplatforms[0];
-
-	std::vector<cl::Device> Vdevices;
-	platform.getDevices(CL_DEVICE_TYPE_GPU, &Vdevices);
-	if (Vdevices.empty()) {
-		printVerbose(BRed + "Error" + ResetColor);
-		throw std::runtime_error("No OpenCL devices found");
-	}
-	this->device = Vdevices[0];
-
-	cl_context_properties properties[] = {
-		CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
-		CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
-		CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
-		0
-	};
-
 	try {
-		this->context = cl::Context(CL_DEVICE_TYPE_GPU, properties, nullptr, nullptr);
-		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
-		this->queue = cl::CommandQueue(context, device, 0);
+		this->platform = getPlatform();
+		this->device = getDevice(platform);
+		this->context = createContext(device, platform);
 		this->program = buildProgram(VkernelProgramPaths);
-		this->kernel = cl::Kernel(this->program, "main");
+		this->kernel = cl::Kernel(this->program, "add");
+		this->queue = cl::CommandQueue(context, device);
+		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
 	}
 	catch (cl::Error &e) {
 		printVerbose(BRed + "Error" + ResetColor);
