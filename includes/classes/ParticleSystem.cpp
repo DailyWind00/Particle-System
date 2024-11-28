@@ -155,7 +155,7 @@ cl::Program	ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 		while (getline(file, line))
 			kernelSource << line << '\n';
 
-		string kernelSourceStr = kernelSource.str();                  // Cause corruption if
+		const string kernelSourceStr = kernelSource.str();             // Cause corruption if
 		sources.push_back({kernelSourceStr, kernelSourceStr.size()}); // in a single line
 	}
 
