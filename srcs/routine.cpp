@@ -23,7 +23,7 @@ void	Rendering(GLFWwindow *window, size_t particleCount) {
 	vector<string> VkernelProgramPaths = {
 		"./srcs/kernels/test.cl"
 	};
-	ParticleSystem particles("test", particleCount, VkernelProgramPaths);
+	ParticleSystem particles(particleCount, VkernelProgramPaths);
 
 	Shader shaders;
 	shaders.add_shader(

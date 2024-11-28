@@ -5,12 +5,11 @@
 // Create a particle system with a given name, a number of particles and a list of OpenCL kernel programs
 // The kernel programs are loaded from the files in VkernelProgramPaths
 // The kernel program name must match the SystemName
-ParticleSystem::ParticleSystem(const string &SystemName, size_t ParticleCount, const vector<string> &VkernelProgramPaths) {
+ParticleSystem::ParticleSystem(size_t ParticleCount, const vector<string> &VkernelProgramPaths) {
 	printVerbose("Creating Particle System");
 
 	size_t bufferSize = ParticleCount * sizeof(Particle);
 	this->particleCount = ParticleCount;
-	this->systemName = SystemName;
 
 	createOpenGLBuffers(bufferSize);
 	createOpenCLContext(VkernelProgramPaths);
@@ -24,6 +23,7 @@ ParticleSystem::~ParticleSystem() {
 	printVerbose("Particle System deleted");
 }
 /// ---
+
 
 
 /// Private functions
@@ -121,7 +121,8 @@ cl::Program ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 		while (getline(file, line))
 			kernelSource << line << '\n';
 
-		sources.push_back({kernelSource.str(), strlen(kernelSource.str().c_str())});
+		string kernelSourceStr = kernelSource.str();                  // Cause corruption if
+		sources.push_back({kernelSourceStr, kernelSourceStr.size()}); // in a single line
 	}
 
     cl::Program program = cl::Program(context, sources);
@@ -167,7 +168,7 @@ void	ParticleSystem::createOpenCLContext(const vector<string> &VkernelProgramPat
 		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
 		this->queue = cl::CommandQueue(context, device, 0);
 		this->program = buildProgram(VkernelProgramPaths);
-		this->kernel = cl::Kernel(this->program, this->systemName);
+		this->kernel = cl::Kernel(this->program, "main");
 	}
 	catch (cl::Error &e) {
 		printVerbose(BRed + "Error" + ResetColor);

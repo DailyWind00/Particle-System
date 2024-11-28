@@ -33,7 +33,6 @@ class ParticleSystem {
 
 		// Other variables
 		size_t				particleCount;
-		string				systemName;
 
 		/// Private functions
 
@@ -43,7 +42,7 @@ class ParticleSystem {
 		void			createOpenCLContext(const vector<string> &VkernelProgramPaths);
 
 	public:
-		ParticleSystem(const string &SystemName, size_t ParticleCount, const vector<string> &VkernelProgramPaths);
+		ParticleSystem(size_t ParticleCount, const vector<string> &VkernelProgramPaths);
 		~ParticleSystem();
 
 		/// Public functions
