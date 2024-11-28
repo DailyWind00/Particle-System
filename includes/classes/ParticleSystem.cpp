@@ -159,7 +159,7 @@ cl::Program	ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 		sources.push_back({kernelSourceStr, kernelSourceStr.size()}); // in a single line
 	}
 
-    cl::Program program = cl::Program(context, sources);
+    cl::Program program(context, sources);
     program.build(device);
 
 	return program;
@@ -174,7 +174,7 @@ void	ParticleSystem::createOpenCLContext(const vector<string> &VkernelProgramPat
 		this->device = getDevice(platform);
 		this->context = createContext(device, platform);
 		this->program = buildProgram(VkernelProgramPaths);
-		this->kernel = cl::Kernel(this->program, "add");
+		// this->kernel = cl::Kernel(program, "add"); // CL_INVALID_KERNEL_NAME (-45)
 		this->queue = cl::CommandQueue(context, device);
 		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
 	}
