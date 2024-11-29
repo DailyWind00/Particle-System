@@ -110,7 +110,7 @@ cl::Platform	ParticleSystem::getPlatform() {
 	std::vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
 	if (platforms.empty())
-		throw std::runtime_error("No OpenCL platforms found");
+		throw runtime_error("No OpenCL platforms found");
 
 	return platforms.front();
 }
@@ -120,7 +120,7 @@ cl::Device	ParticleSystem::getDevice(const cl::Platform &platform) {
 	std::vector<cl::Device> devices;
 	platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
 	if (devices.empty())
-		throw std::runtime_error("No OpenCL devices found");
+		throw runtime_error("No OpenCL devices found");
 
 	return devices.front();
 }
@@ -174,13 +174,17 @@ void	ParticleSystem::createOpenCLContext(const vector<string> &VkernelProgramPat
 		this->device = getDevice(platform);
 		this->context = createContext(device, platform);
 		this->program = buildProgram(VkernelProgramPaths);
-		// this->kernel = cl::Kernel(program, "add"); // CL_INVALID_KERNEL_NAME (-45)
+		this->kernel = cl::Kernel(program, "add"); // CL_INVALID_KERNEL_NAME (-45)
 		this->queue = cl::CommandQueue(context, device);
 		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
 	}
 	catch (cl::Error &e) {
 		printVerbose(BRed + "Error" + ResetColor);
-		throw std::runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
+		throw runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
+	}
+	catch (runtime_error &e) {
+		printVerbose(BRed + "Error" + ResetColor);
+		throw runtime_error("OpenCL error : " + (string)e.what());
 	}
 	
 	printVerbose(BGreen + "Context created" + ResetColor);
