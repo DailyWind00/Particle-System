@@ -1,7 +1,7 @@
 #pragma once
 
 /// Defines
-# define CL_HPP_TARGET_OPENCL_VERSION 300
+# define CL_HPP_TARGET_OPENCL_VERSION 300 // OpenCL 3.0
 # define CL_HPP_ENABLE_EXCEPTIONS
 # define COLOR_HEADER_CXX
 
