@@ -222,8 +222,17 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
 
 
 /// Public functions
-void	ParticleSystem::update() {
-	// TODO
+void	ParticleSystem::update(float time) {
+	// Set the kernel arguments
+	kernel.setArg(0, particles);
+	kernel.setArg(1, time);
+
+	// Execute the kernel
+	std::vector<cl::Memory> memObjects = {particles};
+	queue.enqueueAcquireGLObjects(&memObjects);
+	queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
+	queue.enqueueReleaseGLObjects(&memObjects);
+	queue.finish();
 }
 
 void	ParticleSystem::draw() {

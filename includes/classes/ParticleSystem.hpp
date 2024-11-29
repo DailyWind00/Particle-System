@@ -10,8 +10,8 @@ typedef array<float, 4> vec4;
 // Data structure for a particle
 typedef struct Particle {
 	vec3	position = {50, 50, 50};
-	vec3	velocity = {0, 0, 0};
-	float	life     = 0;
+	vec3	velocity = {10, 10, 10};
+	float	life     = 10;
 } Particle;
 
 // This class is an interface to store particles datas.
@@ -51,6 +51,6 @@ class ParticleSystem {
 
 		/// Public functions
 
-		void	update();
+		void	update(float time);
 		void	draw();
 };
