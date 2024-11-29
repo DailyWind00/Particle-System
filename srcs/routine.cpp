@@ -18,6 +18,8 @@ static void program_loop(GLFWwindow *window, Shader &shaders, ParticleSystem &pa
 void	Rendering(GLFWwindow *window, size_t particleCount) {
 	glClearColor(0.02f, 0.02f, 0.175f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	vector<string> VkernelProgramPaths = {
 		"./srcs/kernels/test.cl"

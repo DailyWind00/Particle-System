@@ -1,3 +1,4 @@
-__kernel void update(__global float* a, __global float* b, __global float* c) {
-    // TODO
+__kernel void update(__global float* particles, float deltaTime) {
+    int index = get_global_id(0);
+    float particle = particles[index] * 7;
 }
