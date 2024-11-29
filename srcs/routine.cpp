@@ -16,7 +16,7 @@ static void program_loop(GLFWwindow *window, Shader &shaders, ParticleSystem &pa
 
 		glfwSwapBuffers(window);
 
-		time += 0.01;
+		time += 0.001 * FRAMETIME;
 	}
 }
 
