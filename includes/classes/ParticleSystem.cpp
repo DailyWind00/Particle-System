@@ -208,7 +208,7 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, velocity));
 
     glEnableVertexAttribArray(2); // Life
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, life));
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, life));
 
     glBindVertexArray(0);
 
