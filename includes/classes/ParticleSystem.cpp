@@ -110,7 +110,7 @@ cl::Platform	ParticleSystem::getPlatform() {
 	std::vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
 	if (platforms.empty())
-		throw std::runtime_error("No OpenCL platforms found");
+		throw runtime_error("No OpenCL platforms found");
 
 	return platforms.front();
 }
@@ -120,12 +120,12 @@ cl::Device	ParticleSystem::getDevice(const cl::Platform &platform) {
 	std::vector<cl::Device> devices;
 	platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
 	if (devices.empty())
-		throw std::runtime_error("No OpenCL devices found");
+		throw runtime_error("No OpenCL devices found");
 
 	return devices.front();
 }
 
-// Create an OpenCL context with OpenGL interoperability
+// Create an OpenCL context with OpenGL interope rability
 cl::Context	ParticleSystem::createContext(const cl::Device &device, const cl::Platform &platform) {
 	cl_context_properties properties[] = { // Interoperability with OpenGL
 		CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
@@ -152,14 +152,13 @@ cl::Program	ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 			printVerbose(BRed + "Error" + ResetColor);
 			throw runtime_error("Failed to open file " + kernelProgramPath + " : " + (string)strerror(errno));
 		}
-		while (getline(file, line))
-			kernelSource << line << '\n';
 
-		string kernelSourceStr = kernelSource.str();                  // Cause corruption if
-		sources.push_back({kernelSourceStr, kernelSourceStr.size()}); // in a single line
+		kernelSource << file.rdbuf();
+		sources.push_back(kernelSource.str());
+		file.close();
 	}
 
-    cl::Program program = cl::Program(context, sources);
+    cl::Program program(context, sources);
     program.build(device);
 
 	return program;
@@ -174,13 +173,17 @@ void	ParticleSystem::createOpenCLContext(const vector<string> &VkernelProgramPat
 		this->device = getDevice(platform);
 		this->context = createContext(device, platform);
 		this->program = buildProgram(VkernelProgramPaths);
-		this->kernel = cl::Kernel(this->program, "add");
+		this->kernel = cl::Kernel(program, "update");
 		this->queue = cl::CommandQueue(context, device);
 		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
 	}
 	catch (cl::Error &e) {
 		printVerbose(BRed + "Error" + ResetColor);
-		throw std::runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
+		throw runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
+	}
+	catch (runtime_error &e) {
+		printVerbose(BRed + "Error" + ResetColor);
+		throw runtime_error("OpenCL error : " + (string)e.what());
 	}
 	
 	printVerbose(BGreen + "Context created" + ResetColor);
@@ -208,7 +211,7 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, velocity));
 
     glEnableVertexAttribArray(2); // Life
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, life));
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, life));
 
     glBindVertexArray(0);
 

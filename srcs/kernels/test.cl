@@ -1,3 +1,3 @@
-__kernel void main(__global Particle* particles, float deltaTime) {
-    int id = get_global_id(0);
+__kernel void update(__global float* a, __global float* b, __global float* c) {
+    // TODO
 }
