@@ -7,9 +7,8 @@ static void program_loop(GLFWwindow *window, Shader &shaders, ParticleSystem &pa
 		getFrametime();
 		handleEvents(window, shaders);
 
-		(void)particles; // Segfault for now
-		// particles.update();
-		// particles.draw();
+		particles.update();
+		particles.draw();
 
 		glfwSwapBuffers(window);
 	}
