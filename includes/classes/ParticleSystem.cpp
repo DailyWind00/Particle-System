@@ -4,7 +4,7 @@
 
 // Create a particle system with a given name, a number of particles and a list of OpenCL kernel programs
 // The kernel programs are loaded from the files in VkernelProgramPaths
-// The kernel program name must match the SystemName
+// The kernel program will begin from the "update" function
 ParticleSystem::ParticleSystem(size_t ParticleCount, const vector<string> &VkernelProgramPaths) {
 	printVerbose("Creating Particle System");
 
@@ -107,7 +107,7 @@ const string	ParticleSystem::CLstrerrno(cl_int error) {
 
 // Get the first OpenCL platform
 cl::Platform	ParticleSystem::getPlatform() {
-	std::vector<cl::Platform> platforms;
+	vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
 	if (platforms.empty())
 		throw runtime_error("No OpenCL platforms found");
@@ -117,7 +117,7 @@ cl::Platform	ParticleSystem::getPlatform() {
 
 // Get the first GPU device from the platform
 cl::Device	ParticleSystem::getDevice(const cl::Platform &platform) {
-	std::vector<cl::Device> devices;
+	vector<cl::Device> devices;
 	platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
 	if (devices.empty())
 		throw runtime_error("No OpenCL devices found");
@@ -228,7 +228,7 @@ void	ParticleSystem::update(float time) {
 	kernel.setArg(1, time);
 
 	// Execute the kernel
-	std::vector<cl::Memory> memObjects = {particles};
+	vector<cl::Memory> memObjects = {particles};
 	queue.enqueueAcquireGLObjects(&memObjects);
 	queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
 	queue.enqueueReleaseGLObjects(&memObjects);

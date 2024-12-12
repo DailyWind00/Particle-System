@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 			cout << "> Run the program with the -h flag to display the help message\n";
 			exit(EXIT_FAILURE);
 		}
-	} catch(const std::exception& e) {
+	} catch(const exception& e) {
 		cerr << BRed << "Flag error : " << e.what() << ResetColor << endl;
 		cout << "> Run the program with the -h flag to display the help message\n";
 		exit(EXIT_FAILURE);
@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 		Rendering(window, particleCount);
 		DestroyWindow(window);
 	}
-	catch(const std::exception& e) {
+	catch(const exception& e) {
 		cerr << BRed <<  "Critical Error : " << e.what() << ResetColor <<'\n';
 		exit(EXIT_FAILURE);
 	}
