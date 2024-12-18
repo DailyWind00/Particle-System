@@ -9,6 +9,7 @@ typedef array<float, 3> vec3;
 typedef array<float, 4> vec4;
 
 // Data structure for a particle
+// Stored in 7 floats
 typedef struct Particle {
 	vec3	position = {50, 50, 50};
 	vec3	velocity = {10, 10, 10};
@@ -21,11 +22,11 @@ typedef struct Particle {
 class ParticleSystem {
 	private:
 		// OpenGL variables
-		
+
 		GLuint				VBO;
 		GLuint				VAO;
 
-		// OpenCL variables (may be in vector for multiple kernels)
+		// OpenCL variables
 
 		cl::Platform		platform;
 		cl::Device			device;

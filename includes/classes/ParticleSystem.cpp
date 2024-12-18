@@ -173,7 +173,17 @@ cl::Program	ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 	}
 
     cl::Program program(context, sources);
-    program.build(device);
+	try {
+		program.build({device});
+	}
+	catch (const cl::Error &e) {
+		if (e.err() == CL_BUILD_PROGRAM_FAILURE) {
+			string log = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);	
+			throw runtime_error("clBuildProgram (CL_BUILD_PROGRAM_FAILURE) :\n" + log);
+		}
+		else
+			throw e;
+	}
 
 	return program;
 }
@@ -189,7 +199,7 @@ void	ParticleSystem::createOpenCLContext(const vector<string> &VkernelProgramPat
 		this->program = buildProgram(VkernelProgramPaths);
 		this->kernel = cl::Kernel(program, "update");
 		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
-		this->queue = cl::CommandQueue(context, device, CL_QUEUE_PROFILING_ENABLE); // To remove when project is finished
+		this->queue = cl::CommandQueue(context, device, CL_QUEUE_PROFILING_ENABLE); // Remove profiling when project is finished
 		this->memObjects.push_back(particles);
 	}
 	catch (const cl::Error &e) {
