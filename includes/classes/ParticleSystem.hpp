@@ -5,15 +5,13 @@
 # include <array>
 
 using namespace std;
-typedef array<float, 3> vec3;
-typedef array<float, 4> vec4;
 
 // Data structure for a particle
 // Stored in 7 floats
 typedef struct Particle {
-	vec3	position = {50, 50, 50};
-	vec3	velocity = {10, 10, 10};
-	float	life     = 10;
+	cl_float3	position;
+	cl_float3	velocity;
+	cl_float	life;
 } Particle;
 
 // This class is an interface to store particles datas.
@@ -56,7 +54,7 @@ class ParticleSystem {
 		~ParticleSystem();
 
 		/// Public functions
-
+		void	printParticlePositions(const std::string& label);
 		void	update(float time);
 		void	draw();
 };

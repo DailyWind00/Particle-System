@@ -238,6 +238,7 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
     glEnableVertexAttribArray(2); // Life
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, life));
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
 	printVerbose(BGreen + "Buffers created" + ResetColor);
@@ -247,16 +248,42 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
 
 
 /// Public functions
+void	ParticleSystem::printParticlePositions(const std::string& label) {
+    std::cout << label << std::endl;
+    // Map the OpenGL buffer to access the particle data
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    Particle* particleData = (Particle*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+    if (particleData) {
+        for (size_t i = 0; i < particleCount; ++i) {
+			std::cout << "Particle " << i << ": [" 
+					  << particleData[i].position.x << ",\t" 
+					  << particleData[i].position.y << ",\t" 
+					  << particleData[i].position.z << ",\t"
+					  << particleData[i].velocity.x << ",\t" 
+					  << particleData[i].velocity.y << ",\t" 
+					  << particleData[i].velocity.z << ",\t"
+					  << particleData[i].life << "]" << std::endl;
+					  
+        }
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void	ParticleSystem::update(float time) {
+	printParticlePositions("Before update");
+
 	// Set the kernel arguments
 	kernel.setArg(0, particles);
 	kernel.setArg(1, time);
 
 	// Execute the kernel
 	queue.enqueueAcquireGLObjects(&memObjects);
-	queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
+    queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
 	queue.enqueueReleaseGLObjects(&memObjects);
 	queue.finish();
+
+	printParticlePositions("After update");
 }
 
 void	ParticleSystem::draw() {
