@@ -54,7 +54,6 @@ class ParticleSystem {
 		~ParticleSystem();
 
 		/// Public functions
-		void	printParticlePositions(const std::string& label);
-		void	update(float time);
+		void	printParticlePositions(const std::string& label); // to remove
 		void	draw();
 };

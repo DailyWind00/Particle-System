@@ -248,8 +248,8 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
 
 
 /// Public functions
-void	ParticleSystem::printParticlePositions(const std::string& label) {
-    std::cout << label << std::endl;
+void	ParticleSystem::printParticlePositions(const std::string& label) { // to remove
+    cout << label << endl;
     // Map the OpenGL buffer to access the particle data
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     Particle* particleData = (Particle*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
@@ -262,7 +262,7 @@ void	ParticleSystem::printParticlePositions(const std::string& label) {
 					  << particleData[i].velocity.x << ",\t" 
 					  << particleData[i].velocity.y << ",\t" 
 					  << particleData[i].velocity.z << ",\t"
-					  << particleData[i].life << "]" << std::endl;
+					  << particleData[i].life << "]" << endl;
 					  
         }
         glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -270,12 +270,11 @@ void	ParticleSystem::printParticlePositions(const std::string& label) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void	ParticleSystem::update(float time) {
+void	ParticleSystem::draw() {
 	printParticlePositions("Before update");
 
 	// Set the kernel arguments
 	kernel.setArg(0, particles);
-	kernel.setArg(1, time);
 
 	// Execute the kernel
 	queue.enqueueAcquireGLObjects(&memObjects);
@@ -284,9 +283,7 @@ void	ParticleSystem::update(float time) {
 	queue.finish();
 
 	printParticlePositions("After update");
-}
 
-void	ParticleSystem::draw() {
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_POINTS, 0, particleCount * sizeof(Particle));
 	glBindVertexArray(0);

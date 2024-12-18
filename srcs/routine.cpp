@@ -9,7 +9,6 @@ static void program_loop(GLFWwindow *window, Shader &shaders, ParticleSystem &pa
 		getFrametime();
 		handleEvents(window, shaders);
 
-		particles.update(time);
 		particles.draw();
 
 		shaders.setFloat("time", time);
