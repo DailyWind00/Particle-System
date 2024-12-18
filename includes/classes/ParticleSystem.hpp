@@ -21,10 +21,12 @@ typedef struct Particle {
 class ParticleSystem {
 	private:
 		// OpenGL variables
+		
 		GLuint				VBO;
 		GLuint				VAO;
 
 		// OpenCL variables (may be in vector for multiple kernels)
+
 		cl::Platform		platform;
 		cl::Device			device;
 		cl::Context			context;
@@ -35,6 +37,7 @@ class ParticleSystem {
 		vector<cl::Memory>	memObjects;
 
 		// Other variables
+
 		size_t				particleCount;
 
 		/// Private functions
