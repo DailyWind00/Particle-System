@@ -5,12 +5,12 @@ typedef struct {
     float life;
 } Particle;
 
-__kernel void update(__global Particle* particles) {
+__kernel void update(__global Particle* particles, int particleCount) {
     int id = get_global_id(0); // Get the unique thread ID
     Particle p = particles[id];
 
     if (p.life <= 0.0f) { // Respawn the particle
-        p.position = (float3)(id, 0.0f, 0.0f);
+        p.position = (float3)((id - particleCount / 2.0f) / 500.0f, 0.0f, 0.0f);
         p.velocity = (float3)(0.0f, 0.001f, 0.0f);
         p.life = 10.0f;
     }

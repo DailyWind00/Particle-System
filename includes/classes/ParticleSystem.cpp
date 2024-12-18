@@ -273,21 +273,27 @@ void	ParticleSystem::printParticlePositions(const std::string& label) { // to re
 }
 
 void	ParticleSystem::draw() {
-	printParticlePositions("Before update");
+	try {
+		printParticlePositions("Before update");
 
-	// Set the kernel arguments
-	kernel.setArg(0, particles);
+		// Set the kernel arguments
+		kernel.setArg(0, particles);
+		kernel.setArg(1, (cl_int)particleCount);
 
-	// Execute the kernel
-	queue.enqueueAcquireGLObjects(&memObjects);
-    queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
-	queue.enqueueReleaseGLObjects(&memObjects);
-	queue.finish();
+		// Execute the kernel
+		queue.enqueueAcquireGLObjects(&memObjects);
+		queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
+		queue.enqueueReleaseGLObjects(&memObjects);
+		queue.finish();
 
-	printParticlePositions("After update");
+		printParticlePositions("After update");
 
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_POINTS, 0, particleCount);
-	glBindVertexArray(0);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_POINTS, 0, particleCount);
+		glBindVertexArray(0);
+	}
+	catch (const cl::Error &e) {
+		throw runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
+	}
 }
 /// ---
