@@ -125,14 +125,28 @@ cl::Device	ParticleSystem::getDevice(const cl::Platform &platform) {
 	return devices.front();
 }
 
-// Create an OpenCL context with OpenGL interope rability
+// Create an OpenCL context with OpenGL interoperability based on the operating system
 cl::Context	ParticleSystem::createContext(const cl::Device &device, const cl::Platform &platform) {
-	cl_context_properties properties[] = { // Interoperability with OpenGL
-		CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
-		CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
-		CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
-		0
-	};
+	#if defined(__linux__) || defined(__unix__)
+		cl_context_properties properties[] = { // Interoperability with OpenGL (Linux)
+			CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
+			CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
+			CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
+			0
+		};
+	#elif __APPLE__
+		cl_context_properties properties[] = { // Interoperability with OpenGL (MacOS)
+			CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE, (cl_context_properties)CGLGetShareGroup(CGLGetCurrentContext()),
+			0
+		};
+	#elif _WIN32
+		cl_context_properties properties[] = { // Interoperability with OpenGL (Windows)
+			CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
+			CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),
+			CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
+			0
+		};
+	#endif
 
 	cl::Context context(device, properties);
 	return context;
