@@ -249,6 +249,8 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
 
 /// Public functions
 void	ParticleSystem::printParticlePositions(const std::string& label) { // to remove
+	if (particleCount > 10)
+		return;
     cout << label << endl;
     // Map the OpenGL buffer to access the particle data
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -285,7 +287,7 @@ void	ParticleSystem::draw() {
 	printParticlePositions("After update");
 
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_POINTS, 0, particleCount * sizeof(Particle));
+	glDrawArrays(GL_POINTS, 0, particleCount);
 	glBindVertexArray(0);
 }
 /// ---
