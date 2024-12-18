@@ -188,14 +188,15 @@ void	ParticleSystem::createOpenCLContext(const vector<string> &VkernelProgramPat
 		this->context = createContext(device, platform);
 		this->program = buildProgram(VkernelProgramPaths);
 		this->kernel = cl::Kernel(program, "update");
-		this->queue = cl::CommandQueue(context, device);
 		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
+		this->queue = cl::CommandQueue(context, device, CL_QUEUE_PROFILING_ENABLE); // To remove when project is finished
+		this->memObjects.push_back(particles);
 	}
-	catch (cl::Error &e) {
+	catch (const cl::Error &e) {
 		printVerbose(BRed + "Error" + ResetColor);
 		throw runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
 	}
-	catch (runtime_error &e) {
+	catch (const runtime_error &e) {
 		printVerbose(BRed + "Error" + ResetColor);
 		throw runtime_error("OpenCL error : " + (string)e.what());
 	}
@@ -242,7 +243,6 @@ void	ParticleSystem::update(float time) {
 	kernel.setArg(1, time);
 
 	// Execute the kernel
-	vector<cl::Memory> memObjects = {particles};
 	queue.enqueueAcquireGLObjects(&memObjects);
 	queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
 	queue.enqueueReleaseGLObjects(&memObjects);

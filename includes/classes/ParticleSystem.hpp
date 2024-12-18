@@ -1,7 +1,8 @@
 #pragma once
 
-#include <array>
-#include "config.hpp"
+# include "config.hpp"
+# include <vector>
+# include <array>
 
 using namespace std;
 typedef array<float, 3> vec3;
@@ -29,8 +30,9 @@ class ParticleSystem {
 		cl::Context			context;
 		cl::Program			program;
 		cl::Kernel			kernel;
-		cl::CommandQueue	queue;
 		cl::BufferGL		particles; // VRAM buffer
+		cl::CommandQueue	queue;
+		vector<cl::Memory>	memObjects;
 
 		// Other variables
 		size_t				particleCount;
