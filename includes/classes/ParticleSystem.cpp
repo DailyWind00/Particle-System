@@ -273,12 +273,20 @@ void	ParticleSystem::printParticlePositions(const std::string& label) { // to re
 }
 
 void	ParticleSystem::draw() {
+	static cl_float	time = 0;
+
 	try {
 		printParticlePositions("Before update");
 
 		// Set the kernel arguments
+		cl_float2 mouse;
+		mouse.s[0] = WINDOW_HEIGHT;
+		mouse.s[1] = WINDOW_WIDTH;
+
 		kernel.setArg(0, particles);
 		kernel.setArg(1, (cl_int)particleCount);
+		kernel.setArg(2, time);
+		kernel.setArg(3, mouse);
 
 		// Execute the kernel
 		queue.enqueueAcquireGLObjects(&memObjects);
@@ -291,6 +299,8 @@ void	ParticleSystem::draw() {
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_POINTS, 0, particleCount);
 		glBindVertexArray(0);
+
+		time += 0.1f;
 	}
 	catch (const cl::Error &e) {
 		throw runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");

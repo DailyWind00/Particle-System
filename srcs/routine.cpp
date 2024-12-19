@@ -29,7 +29,7 @@ void	Rendering(GLFWwindow *window, size_t particleCount) {
 	// glPointSize(5.0f);
 
 	vector<string> VkernelProgramPaths = {
-		"./srcs/kernels/test.cl"
+		"./srcs/kernels/rain.cl"
 	};
 	ParticleSystem particles(particleCount, VkernelProgramPaths);
 
