@@ -9,35 +9,36 @@ static void program_loop(GLFWwindow *window, Shader &shaders, ParticleSystem &pa
 		getFrametime();
 		handleEvents(window, shaders);
 
-		particles.update(time);
 		particles.draw();
 
 		shaders.setFloat("time", time);
+		shaders.setVec2("mouse", MOUSE_X, MOUSE_Y);
 
 		glfwSwapBuffers(window);
 
-		time += 0.01;
+		time += 0.001 * FRAMETIME;
 	}
 }
 
 // Will call the program loop
 void	Rendering(GLFWwindow *window, size_t particleCount) {
-	glClearColor(0.02f, 0.02f, 0.175f, 1.0f);
+	glClearColor(0.02f, 0.02f, 0.02f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// glEnable(GL_PROGRAM_POINT_SIZE);
-	// glPointSize(500.0f);
+	// glPointSize(5.0f);
 
 	vector<string> VkernelProgramPaths = {
-		"./srcs/kernels/test.cl"
+		"./srcs/kernels/random_utils.cl",
+		"./srcs/kernels/rain.cl"
 	};
 	ParticleSystem particles(particleCount, VkernelProgramPaths);
 
 	Shader shaders;
 	shaders.add_shader(
-		"./srcs/shaders/vertex.vert",
-		"./srcs/shaders/fragment.frag",
+		"./srcs/shaders/rain/vertex.vert",
+		"./srcs/shaders/rain/fragment.frag",
 		"particleShader"
 	);
 

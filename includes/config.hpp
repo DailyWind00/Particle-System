@@ -1,7 +1,7 @@
 #pragma once
 
 /// Defines
-# define CL_HPP_TARGET_OPENCL_VERSION 300
+# define CL_HPP_TARGET_OPENCL_VERSION 300 // OpenCL 3.0
 # define CL_HPP_ENABLE_EXCEPTIONS
 # define COLOR_HEADER_CXX
 
@@ -38,6 +38,7 @@ extern int		WINDOW_HEIGHT;
 extern double	FRAMETIME;
 extern size_t	FPS;
 extern float	FOV;
+extern double	MOUSE_X, MOUSE_Y;
 
 // Flags (default values are set in flags.cpp)
 extern bool					RESIZABLE;

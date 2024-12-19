@@ -141,7 +141,7 @@ GLuint	Shader::recompile(GLuint shaderID) {
 		currentShaderID = newID;
 		glUseProgram(currentShaderID);
 	}
-	catch(const std::exception& e) {
+	catch(const exception& e) {
 		cerr << BRed << "Shader recompilation error : " << e.what() << ResetColor <<  endl;
 		glUseProgram(currentShaderID);
 		return 0;

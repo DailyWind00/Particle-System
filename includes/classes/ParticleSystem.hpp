@@ -1,17 +1,17 @@
 #pragma once
 
-#include <array>
-#include "config.hpp"
+# include "config.hpp"
+# include <vector>
+# include <array>
 
 using namespace std;
-typedef array<float, 3> vec3;
-typedef array<float, 4> vec4;
 
 // Data structure for a particle
+// Stored in 7 floats
 typedef struct Particle {
-	vec3	position = {50, 50, 50};
-	vec3	velocity = {0, 0, 0};
-	float	life     = 0;
+	cl_float3	position;
+	cl_float3	velocity;
+	cl_float	life;
 } Particle;
 
 // This class is an interface to store particles datas.
@@ -20,19 +20,23 @@ typedef struct Particle {
 class ParticleSystem {
 	private:
 		// OpenGL variables
+
 		GLuint				VBO;
 		GLuint				VAO;
 
-		// OpenCL variables (may be in vector for multiple kernels)
+		// OpenCL variables
+
 		cl::Platform		platform;
 		cl::Device			device;
 		cl::Context			context;
 		cl::Program			program;
 		cl::Kernel			kernel;
-		cl::CommandQueue	queue;
 		cl::BufferGL		particles; // VRAM buffer
+		cl::CommandQueue	queue;
+		vector<cl::Memory>	memObjects;
 
 		// Other variables
+
 		size_t				particleCount;
 
 		/// Private functions
@@ -50,7 +54,5 @@ class ParticleSystem {
 		~ParticleSystem();
 
 		/// Public functions
-
-		void	update();
 		void	draw();
 };

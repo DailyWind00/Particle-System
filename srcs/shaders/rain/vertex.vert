@@ -8,12 +8,8 @@ layout (location=0) out vec3 fparticlePos;
 layout (location=1) out vec3 fparticleVel;
 layout (location=2) out float fparticleLife;
 
-uniform mat4 Transform;
-uniform mat4 View;
-uniform mat4 Projection;
-
 void main() {
-	gl_Position = Projection * View * Transform * vec4(vparticlePos, 1.0);
+	gl_Position = vec4(vparticlePos, 1.0);
 
 	fparticlePos = vparticlePos;
 	fparticleVel = vparticleVel;

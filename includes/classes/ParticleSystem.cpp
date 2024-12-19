@@ -4,7 +4,7 @@
 
 // Create a particle system with a given name, a number of particles and a list of OpenCL kernel programs
 // The kernel programs are loaded from the files in VkernelProgramPaths
-// The kernel program name must match the SystemName
+// The kernel program will begin from the "update" function
 ParticleSystem::ParticleSystem(size_t ParticleCount, const vector<string> &VkernelProgramPaths) {
 	printVerbose("Creating Particle System");
 
@@ -107,7 +107,7 @@ const string	ParticleSystem::CLstrerrno(cl_int error) {
 
 // Get the first OpenCL platform
 cl::Platform	ParticleSystem::getPlatform() {
-	std::vector<cl::Platform> platforms;
+	vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
 	if (platforms.empty())
 		throw runtime_error("No OpenCL platforms found");
@@ -117,7 +117,7 @@ cl::Platform	ParticleSystem::getPlatform() {
 
 // Get the first GPU device from the platform
 cl::Device	ParticleSystem::getDevice(const cl::Platform &platform) {
-	std::vector<cl::Device> devices;
+	vector<cl::Device> devices;
 	platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
 	if (devices.empty())
 		throw runtime_error("No OpenCL devices found");
@@ -125,14 +125,28 @@ cl::Device	ParticleSystem::getDevice(const cl::Platform &platform) {
 	return devices.front();
 }
 
-// Create an OpenCL context with OpenGL interope rability
+// Create an OpenCL context with OpenGL interoperability based on the operating system
 cl::Context	ParticleSystem::createContext(const cl::Device &device, const cl::Platform &platform) {
-	cl_context_properties properties[] = { // Interoperability with OpenGL
-		CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
-		CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
-		CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
-		0
-	};
+	#if defined(__linux__) || defined(__unix__)
+		cl_context_properties properties[] = { // Interoperability with OpenGL (Linux)
+			CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
+			CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
+			CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
+			0
+		};
+	#elif __APPLE__
+		cl_context_properties properties[] = { // Interoperability with OpenGL (MacOS)
+			CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE, (cl_context_properties)CGLGetShareGroup(CGLGetCurrentContext()),
+			0
+		};
+	#elif _WIN32
+		cl_context_properties properties[] = { // Interoperability with OpenGL (Windows)
+			CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
+			CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),
+			CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
+			0
+		};
+	#endif
 
 	cl::Context context(device, properties);
 	return context;
@@ -148,10 +162,8 @@ cl::Program	ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 		stringstream kernelSource;
 		string line;
 
-		if (!file.is_open()) {
-			printVerbose(BRed + "Error" + ResetColor);
+		if (!file.is_open())
 			throw runtime_error("Failed to open file " + kernelProgramPath + " : " + (string)strerror(errno));
-		}
 
 		kernelSource << file.rdbuf();
 		sources.push_back(kernelSource.str());
@@ -159,7 +171,17 @@ cl::Program	ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 	}
 
     cl::Program program(context, sources);
-    program.build(device);
+	try {
+		program.build({device});
+	}
+	catch (const cl::Error &e) {
+		if (e.err() == CL_BUILD_PROGRAM_FAILURE) {
+			string log = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device);	
+			throw runtime_error("clBuildProgram (CL_BUILD_PROGRAM_FAILURE) :\n" + log);
+		}
+		else
+			throw e;
+	}
 
 	return program;
 }
@@ -174,14 +196,15 @@ void	ParticleSystem::createOpenCLContext(const vector<string> &VkernelProgramPat
 		this->context = createContext(device, platform);
 		this->program = buildProgram(VkernelProgramPaths);
 		this->kernel = cl::Kernel(program, "update");
-		this->queue = cl::CommandQueue(context, device);
 		this->particles = cl::BufferGL(context, CL_MEM_READ_WRITE, VBO); // Interoperability with OpenGL
+		this->queue = cl::CommandQueue(context, device, CL_QUEUE_PROFILING_ENABLE); // Remove profiling when project is finished
+		this->memObjects.push_back(particles);
 	}
-	catch (cl::Error &e) {
+	catch (const cl::Error &e) {
 		printVerbose(BRed + "Error" + ResetColor);
 		throw runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
 	}
-	catch (runtime_error &e) {
+	catch (const runtime_error &e) {
 		printVerbose(BRed + "Error" + ResetColor);
 		throw runtime_error("OpenCL error : " + (string)e.what());
 	}
@@ -213,6 +236,7 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
     glEnableVertexAttribArray(2); // Life
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)offsetof(Particle, life));
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
 	printVerbose(BGreen + "Buffers created" + ResetColor);
@@ -222,13 +246,34 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
 
 
 /// Public functions
-void	ParticleSystem::update() {
-	// TODO
-}
-
 void	ParticleSystem::draw() {
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_POINTS, 0, particleCount * sizeof(Particle));
-	glBindVertexArray(0);
+	static cl_float	time = 0;
+
+	try {
+		// Set the kernel arguments
+		cl_float2 mouse;
+		mouse.s[0] = MOUSE_X;
+		mouse.s[1] = MOUSE_Y;
+
+		kernel.setArg(0, particles);
+		kernel.setArg(1, (cl_int)particleCount);
+		kernel.setArg(2, time);
+		kernel.setArg(3, mouse);
+
+		// Execute the kernel
+		queue.enqueueAcquireGLObjects(&memObjects);
+		queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
+		queue.enqueueReleaseGLObjects(&memObjects);
+		queue.finish();
+
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_POINTS, 0, particleCount);
+		glBindVertexArray(0);
+
+		time += 0.1f;
+	}
+	catch (const cl::Error &e) {
+		throw runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
+	}
 }
 /// ---
