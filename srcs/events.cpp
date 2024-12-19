@@ -12,6 +12,40 @@ static void resize_viewport(GLFWwindow *window, int width, int height) {
 	(void)window;
 }
 
+// Toggle fullscreen mode
+static void setFullscreen(GLFWwindow *window) {
+	static bool fullscreenKeyPressed = false;
+
+	if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
+		if (fullscreenKeyPressed)
+			return;
+
+		static bool fullscreen = true;
+		static int x, y, width, height;
+
+		if (fullscreen) {
+			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+			// Save the window position and size
+			glfwGetWindowPos(window, &x, &y);
+			glfwGetWindowSize(window, &width, &height);
+
+			glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+			printVerbose("Fullscreen mode");
+		}
+		else {
+			glfwSetWindowMonitor(window, nullptr, x, y, width, height, 0);
+			printVerbose("Windowed mode");
+		}
+
+		fullscreen = !fullscreen;
+		fullscreenKeyPressed = true;
+	}
+	else
+		fullscreenKeyPressed = false;
+}
+
 // Update the FPS counter in the window title
 static void updateFPS(GLFWwindow *window) {
 	static size_t previousFPS = 0;
@@ -42,6 +76,7 @@ void	handleEvents(GLFWwindow *window, Shader &shaders) {
 	if (RESIZABLE)
 		glfwSetFramebufferSizeCallback(window, resize_viewport);
 
+	setFullscreen(window);
 	updateFPS(window);
 	getMousePos(window);
 	

@@ -280,8 +280,8 @@ void	ParticleSystem::draw() {
 
 		// Set the kernel arguments
 		cl_float2 mouse;
-		mouse.s[0] = WINDOW_HEIGHT;
-		mouse.s[1] = WINDOW_WIDTH;
+		mouse.s[0] = MOUSE_X;
+		mouse.s[1] = MOUSE_Y;
 
 		kernel.setArg(0, particles);
 		kernel.setArg(1, (cl_int)particleCount);
