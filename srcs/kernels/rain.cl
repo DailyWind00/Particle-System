@@ -20,7 +20,10 @@ __kernel void update(__global Particle* particles, int particleCount, float time
         p.life = 1.0f;
     }
 
-    // Basic particle behavior
+    // Wind
+    p.velocity.x += randRange(seed * 5, -0.00005f, 0.00005f);
+
+    // Particle physics
     p.position += p.velocity * p.life;
 
     p.life += 0.005f;
