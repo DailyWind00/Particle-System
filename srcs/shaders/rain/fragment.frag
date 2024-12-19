@@ -9,5 +9,5 @@ out vec4 screenColor;
 uniform float time;
 
 void main() {
-	screenColor = vec4(1.0, 1.0, 1.0, 1.0);
+	screenColor = vec4(fparticleVel.y, 0.5f, 1.0f, fparticlePos.z);
 }

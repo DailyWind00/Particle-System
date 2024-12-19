@@ -29,14 +29,15 @@ void	Rendering(GLFWwindow *window, size_t particleCount) {
 	// glPointSize(5.0f);
 
 	vector<string> VkernelProgramPaths = {
+		"./srcs/kernels/random.clutils",
 		"./srcs/kernels/rain.cl"
 	};
 	ParticleSystem particles(particleCount, VkernelProgramPaths);
 
 	Shader shaders;
 	shaders.add_shader(
-		"./srcs/shaders/vertex.vert",
-		"./srcs/shaders/fragment.frag",
+		"./srcs/shaders/rain/vertex.vert",
+		"./srcs/shaders/rain/fragment.frag",
 		"particleShader"
 	);
 

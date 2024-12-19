@@ -162,10 +162,8 @@ cl::Program	ParticleSystem::buildProgram(const vector<string> &VkernelProgramPat
 		stringstream kernelSource;
 		string line;
 
-		if (!file.is_open()) {
-			printVerbose(BRed + "Error" + ResetColor);
+		if (!file.is_open())
 			throw runtime_error("Failed to open file " + kernelProgramPath + " : " + (string)strerror(errno));
-		}
 
 		kernelSource << file.rdbuf();
 		sources.push_back(kernelSource.str());
