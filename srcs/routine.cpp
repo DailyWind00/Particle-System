@@ -12,6 +12,7 @@ static void program_loop(GLFWwindow *window, Shader &shaders, ParticleSystem &pa
 		particles.draw();
 
 		shaders.setFloat("time", time);
+		shaders.setVec2("mouse", MOUSE_X, MOUSE_Y);
 
 		glfwSwapBuffers(window);
 

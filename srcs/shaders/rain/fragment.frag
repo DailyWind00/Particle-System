@@ -6,7 +6,8 @@ layout (location=2) in float fparticleLife;
 
 out vec4 screenColor;
 
-uniform float time;
+uniform float	time;
+uniform vec2	mouse;
 
 // Generate a random float based on a seed
 float randomFloat(vec2 seed) {
@@ -20,11 +21,15 @@ float randRange(vec2 seed, float min, float max) {
 
 void main() {
 	vec2 seed = vec2(fparticlePos.x * 1000.0f, fparticlePos.y * 1000.0f);
+	float brightness = 1.0f - clamp(length(fparticlePos.xy - mouse) * 1.75f, 0.50f, 1.0f);
+	brightness = smoothstep(0.0f, 1.0f, brightness + 0.05f);
 
-	screenColor = vec4(
-		fparticleVel.y, 
-		randRange(seed, 0.0f, 1.0f), 
+	vec4 baseColor = vec4(
+		0.0f, 
+		randRange(seed, 0.0f, 1.0f),
 		1.0f,
 		fparticlePos.z
 	);
+
+	screenColor = mix(baseColor, vec4(1.0f), brightness);
 }

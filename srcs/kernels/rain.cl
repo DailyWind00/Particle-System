@@ -21,9 +21,11 @@ __kernel void update(__global Particle* particles, int particleCount, float time
     }
 
     // Basic particle behavior
-    p.position += p.velocity;
+    p.position += p.velocity * p.life;
 
-    p.life = p.position.y > -1.0f;
+    p.life += 0.005f;
+    if (p.position.y < -1.0f)
+        p.life = 0.0f;
 
     // Update the particle back to the global memory
     particles[id] = p;
