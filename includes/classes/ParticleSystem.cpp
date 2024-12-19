@@ -246,36 +246,10 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
 
 
 /// Public functions
-void	ParticleSystem::printParticlePositions(const std::string& label) { // to remove
-	if (particleCount > 10)
-		return;
-    cout << label << endl;
-    // Map the OpenGL buffer to access the particle data
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    Particle* particleData = (Particle*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-    if (particleData) {
-        for (size_t i = 0; i < particleCount; ++i) {
-			std::cout << "Particle " << i << ": [" 
-					  << particleData[i].position.x << ",\t" 
-					  << particleData[i].position.y << ",\t" 
-					  << particleData[i].position.z << ",\t"
-					  << particleData[i].velocity.x << ",\t" 
-					  << particleData[i].velocity.y << ",\t" 
-					  << particleData[i].velocity.z << ",\t"
-					  << particleData[i].life << "]" << endl;
-					  
-        }
-        glUnmapBuffer(GL_ARRAY_BUFFER);
-    }
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
 void	ParticleSystem::draw() {
 	static cl_float	time = 0;
 
 	try {
-		printParticlePositions("Before update");
-
 		// Set the kernel arguments
 		cl_float2 mouse;
 		mouse.s[0] = MOUSE_X;
@@ -291,8 +265,6 @@ void	ParticleSystem::draw() {
 		queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
 		queue.enqueueReleaseGLObjects(&memObjects);
 		queue.finish();
-
-		printParticlePositions("After update");
 
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_POINTS, 0, particleCount);
