@@ -17,6 +17,7 @@
 # include <fstream>
 # include <string.h>
 # include <GL/glx.h>
+# include <JSON/json_config.hpp>
 
 /// Custom includes
 # include "color.h"
