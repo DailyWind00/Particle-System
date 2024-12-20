@@ -33,6 +33,8 @@ int main(int argc, char **argv) {
 	}
 	catch(const exception& e) {
 		cerr << BRed <<  "Critical Error : " << e.what() << ResetColor <<'\n';
+		if (string(e.what()).find("CL") != string::npos)
+			cerr << BCyan << "You got a OpenCL error, " << CL_ERROR_MSG << " if you want the documentation" << ResetColor << endl;
 		exit(EXIT_FAILURE);
 	}
 }

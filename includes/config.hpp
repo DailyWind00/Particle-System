@@ -4,6 +4,7 @@
 # define CL_HPP_TARGET_OPENCL_VERSION 300 // OpenCL 3.0
 # define CL_HPP_ENABLE_EXCEPTIONS
 # define COLOR_HEADER_CXX
+# define CL_ERROR_MSG "\033]8;;https://registry.khronos.org/OpenCL/specs/opencl-cplusplus-1.2.pdf\033\\[Click Here]\033]8;;\033\\"
 
 /// System includes
 # include <iostream>
