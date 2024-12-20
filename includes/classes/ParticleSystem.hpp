@@ -9,8 +9,8 @@ using namespace std;
 // Data structure for a particle
 // Stored in 7 floats
 typedef struct Particle {
-	cl_float3	position;
-	cl_float3	velocity;
+	cl_float	position[3];
+	cl_float	velocity[3];
 	cl_float	life;
 } Particle;
 

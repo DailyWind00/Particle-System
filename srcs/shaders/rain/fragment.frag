@@ -31,5 +31,5 @@ void main() {
 		fparticlePos.z
 	);
 
-	screenColor = mix(baseColor, vec4(1.0f), brightness);
+	screenColor = mix(baseColor, vec4(vec3(1.0f), fparticlePos.z), brightness);
 }
