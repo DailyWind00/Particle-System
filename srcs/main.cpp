@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
 
 	try {
 		if (checkFlags(argc, argv) == argc - 1) {
-			cerr << BRed << "No file specified\n" << ResetColor;
+			cerr << BRed << "No particle count specified\n" << ResetColor;
 			cout << "> Run the program with the -h flag to display the help message\n";
 			exit(EXIT_FAILURE);
 		}
