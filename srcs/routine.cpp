@@ -26,8 +26,8 @@ void	Rendering(GLFWwindow *window, size_t particleCount) {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	// glEnable(GL_PROGRAM_POINT_SIZE);
-	// glPointSize(5.0f);
+	glEnable(GL_PROGRAM_POINT_SIZE);
+	glPointSize(PARTICLE_SIZE);
 
 	vector<string> VkernelProgramPaths = {
 		"./srcs/kernels/random_utils.cl",

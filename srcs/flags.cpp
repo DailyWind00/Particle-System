@@ -3,7 +3,7 @@
 bool				RESIZABLE = false;
 bool				VERBOSE = false;
 bool				SHOW_TOOLTIP = true;
-bool				SPEED = 1;
+int					PARTICLE_SIZE = 1;
 KEYBOARD_LANGUAGE	KEYBOARD = KEYBOARD_LANGUAGE::QWERTY;
 
 static int setflagVerbose(bool value) {
@@ -11,24 +11,24 @@ static int setflagVerbose(bool value) {
 	return 1;
 }
 
-static int setflagSpeed(int &i, int argc, char **argv) {
-	if (i == argc - 1)
-		throw runtime_error("No speed argument");
-
-	stringstream ss(argv[++i]);
-	ss >> SPEED;
-
-	if (!ss)
-		throw runtime_error("Invalid speed argument");
-	if (SPEED <= 0)
-		throw runtime_error("Speed must be greater than 0");
-	
-	return 2;
-}
-
 static int setflagResizable(bool value) {
 	RESIZABLE = value;
 	return 1;
+}
+
+static int setflagSize(int &i, int argc, char **argv) {
+	if (i == argc - 1)
+		throw runtime_error("No particle size argument");
+
+	stringstream ss(argv[++i]);
+	ss >> PARTICLE_SIZE;
+
+	if (!ss)
+		throw runtime_error("Invalid particle size argument");
+	if (PARTICLE_SIZE <= 0)
+		throw runtime_error("Particle size must be greater than 0");
+	
+	return 2;
 }
 
 static int setflagShowTooltip(bool value) {
@@ -53,8 +53,8 @@ static int setflagKeyboardLanguage(string &arg, int &i, int argc, char **argv) {
 
 // return the number of flags
 int	checkFlags(int argc, char **argv) {
-	int i;
 	int flags = 0;
+	int i;
 
 	for (i = 1; i < argc; i++) {
 		string arg(argv[i]);
@@ -65,11 +65,11 @@ int	checkFlags(int argc, char **argv) {
 		if (arg == "-v" || arg == "--verbose")
 			flags += setflagVerbose(true);
 
-		else if (arg == "-s" || arg == "--speed")
-			flags += setflagSpeed(i, argc, argv);
-
 		else if (arg == "-r" || arg == "--resizable")
 			flags += setflagResizable(true);
+
+		else if (arg == "-s" || arg == "--size")
+			flags += setflagSize(i, argc, argv);
 
 		else if (arg == "-k" || arg == "--keyboard")
 			flags += setflagKeyboardLanguage(arg, i, argc, argv);

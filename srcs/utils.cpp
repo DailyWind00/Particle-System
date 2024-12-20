@@ -9,8 +9,8 @@ void	displayHelp(char *executable_name) {
 	cout << "Usage: " << executable_name << " [options] <ParticleCount>\n";
 	cout << "Options:\n";
 	cout << "\t-v, --verbose\t\t\tVerbose mode\n";
-	cout << "\t-s, --speed [value]\t\tSet the camera speed (default 1)\n";
 	cout << "\t-r, --resizable\t\t\tResizable window\n";
+	cout << "\t-s, --size [value]\t\tSet the particles size (default 1)\n";
 	cout << "\t-k, --keyboard [option]\t\tChange the keyboard language\n";
 	cout << LightGray << "\t\t│ > Options availables :                     │\n" << ResetColor;
 	cout << LightGray << "\t\t│ azerty : set the keyboard to azerty        │\n" << ResetColor;
@@ -22,7 +22,14 @@ void	displayHelp(char *executable_name) {
 
 // Display the commands available in the program
 void	displayCommands() {
-	// TODO
+	if (!SHOW_TOOLTIP)
+		return;
+
+	cout << BLightBlue << "=== Commands ===\n" << ResetColor;
+	cout << " F5\t\t\t: Recompile the current shader\n";
+	cout << " Left/Right arrows\t: Switch particle system\n";
+	cout << " ESC\t\t\t: Close the window\n";
+	printVerbose(BLightBlue + "================" + ResetColor);
 }
 
 // Load the texture using stb_image and return the data, throw an error if the texture can't be loaded

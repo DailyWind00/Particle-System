@@ -44,7 +44,7 @@ extern double	MOUSE_X, MOUSE_Y;
 extern bool					RESIZABLE;
 extern bool					VERBOSE;
 extern bool					SHOW_TOOLTIP;
-extern bool					SPEED;
+extern int					PARTICLE_SIZE;
 extern KEYBOARD_LANGUAGE	KEYBOARD;
 
 /// Functions
