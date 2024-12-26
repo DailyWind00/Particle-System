@@ -11,7 +11,7 @@ static void program_loop(GLFWwindow *window, ParticleSystemUI &particleSystems) 
 		
 		handleEvents(window, particleSystems);
 
-		// particleSystems.setUniform("blackhole", "mouse", (vec2){MOUSE_X, MOUSE_Y});
+		particleSystems.setUniform("blackhole", "mouse", (vec2){MOUSE_X, MOUSE_Y});
 		particleSystems.drawActivesParticles();
 
 		glfwSwapBuffers(window);

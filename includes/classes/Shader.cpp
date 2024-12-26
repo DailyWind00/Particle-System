@@ -223,6 +223,46 @@ GLuint	Shader::SetPreviousShader() {
 
 
 
+/// Uniforms setters
+
+// Set a boolean uniform
+void Shader::setUniform(const GLuint &shaderID, const string &name, bool value) {
+	glUniform1i(glGetUniformLocation(shaderID, name.c_str()), (int)value);
+}
+
+// Set an integer uniform
+void Shader::setUniform(const GLuint &shaderID, const string &name, int value) {
+	glUniform1i(glGetUniformLocation(shaderID, name.c_str()), value);
+}
+
+// Set a float uniform
+void Shader::setUniform(const GLuint &shaderID, const string &name, float value) {
+	glUniform1f(glGetUniformLocation(shaderID, name.c_str()), value);
+}
+
+// Set a vec2 uniform
+void Shader::setUniform(const GLuint &shaderID, const string &name, vec2 value) {
+	glUniform2f(glGetUniformLocation(shaderID, name.c_str()), value[0], value[1]);
+}
+
+// Set a vec3 uniform
+void Shader::setUniform(const GLuint &shaderID, const string &name, vec3 value) {
+	glUniform3f(glGetUniformLocation(shaderID, name.c_str()), value[0], value[1], value[2]);
+}
+
+// Set a vec4 uniform
+void Shader::setUniform(const GLuint &shaderID, const string &name, vec4 value) {
+	glUniform4f(glGetUniformLocation(shaderID, name.c_str()), value[0], value[1], value[2], value[3]);
+}
+
+// Set a mat4 uniform
+void Shader::setUniform(const GLuint &shaderID, const string &name, mat4 value) {
+	glUniformMatrix4fv(glGetUniformLocation(shaderID, name.c_str()), 1, GL_FALSE, value.data());
+}
+/// ---
+
+
+
 /// Getters
 
 // Return the id of the current shader

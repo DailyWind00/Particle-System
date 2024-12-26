@@ -50,29 +50,13 @@ class Shader {
 
         /// Uniforms setters
 
-        template <typename T>
-        void    setUniform(const GLuint &shaderID, const string &name, T value) {
-            use(shaderID);
-
-            if (is_same<T, bool>())
-                glUniform1i(glGetUniformLocation(shaderID, name.c_str()), (int)value);
-            else if (is_same<T, int>())
-                glUniform1i(glGetUniformLocation(shaderID, name.c_str()), value);
-            else if (is_same<T, float>())
-                glUniform1f(glGetUniformLocation(shaderID, name.c_str()), value);
-            else if (is_same<T, vec2>())
-                glUniform2f(glGetUniformLocation(shaderID, name.c_str()), value[0], value[1]);
-            else if (is_same<T, vec3>())
-                glUniform3f(glGetUniformLocation(shaderID, name.c_str()), value[0], value[1], value[2]);
-            else if (is_same<T, vec4>())
-                glUniform4f(glGetUniformLocation(shaderID, name.c_str()), value[0], value[1], value[2], value[3]);
-            else if (is_same<T, mat4>())
-                glUniformMatrix4fv(glGetUniformLocation(shaderID, name.c_str()), 1, GL_FALSE, &value[0]);
-            else
-                throw runtime_error("Invalid uniform type");
-            
-            use(0);
-        };
+        void    setUniform(const GLuint &shaderID, const string &name, bool value);
+        void    setUniform(const GLuint &shaderID, const string &name, int value);
+        void    setUniform(const GLuint &shaderID, const string &name, float value);
+        void    setUniform(const GLuint &shaderID, const string &name, vec2 value);
+        void    setUniform(const GLuint &shaderID, const string &name, vec3 value);
+        void    setUniform(const GLuint &shaderID, const string &name, vec4 value);
+        void    setUniform(const GLuint &shaderID, const string &name, mat4 value);
 
         /// Getters
 
