@@ -1,0 +1,11 @@
+particleSystem: [
+    {
+        "name": "string",
+        "shader": ["vertexPath", "fragmentPath"],
+        "kernel": ["kernelPath", ...]
+    },
+    {
+        ...
+    }
+    ...
+]
