@@ -78,7 +78,7 @@ static void changeParticlesSize(GLFWwindow *window) {
 		printVerbose("Particles size : " + to_string(PARTICLE_SIZE));
 		sizeKeyPressed = true;
 	}
-	else if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS) {
+	else if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS && PARTICLE_SIZE > 1) {
 		if (sizeKeyPressed)
 			return;
 
