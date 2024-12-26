@@ -50,40 +50,29 @@ class Shader {
 
         /// Uniforms setters
 
-        // Bool
-        void    setBool  (const string &name, bool value);
-        void    setBool  (const GLuint &shaderID, const string &name, bool value);
+        template <typename T>
+        void    setUniform(const GLuint &shaderID, const string &name, T value) {
+            use(shaderID);
 
-        // Int
-        void    setInt   (const string &name, int value);
-        void    setInt   (const GLuint &shaderID, const string &name, int value);
-
-        // Float
-        void    setFloat (const string &name, float value);
-        void    setFloat (const GLuint &shaderID, const string &name, float value);
-
-        // Vec2
-        void    setVec2  (const string &name, float x, float y);
-        void    setVec2  (const GLuint &shaderID, const string &name, float x, float y);
-        void    setVec2  (const string &name, vec2 vector);
-        void    setVec2  (const GLuint &shaderID, const string &name, vec2 vector);
-
-        // Vec3
-        void    setVec3  (const string &name, float x, float y, float z);
-        void    setVec3  (const GLuint &shaderID, const string &name, float x, float y, float z);
-        void    setVec3  (const string &name, vec3 vector);
-        void    setVec3  (const GLuint &shaderID, const string &name, vec3 vector);
-
-        // Vec4
-        void    setVec4  (const string &name, float x, float y, float z, float w);
-        void    setVec4  (const GLuint &shaderID, const string &name, float x, float y, float z, float w);
-        void    setVec4  (const string &name, vec4 vector);
-        void    setVec4  (const GLuint &shaderID, const string &name, vec4 vector);
-
-        // Mat4
-        void    setMat4  (const string &name, mat4 matrix);
-        void    setMat4  (const GLuint &shaderID, const string &name, mat4 matrix);
-
+            if (is_same<T, bool>())
+                glUniform1i(glGetUniformLocation(shaderID, name.c_str()), (int)value);
+            else if (is_same<T, int>())
+                glUniform1i(glGetUniformLocation(shaderID, name.c_str()), value);
+            else if (is_same<T, float>())
+                glUniform1f(glGetUniformLocation(shaderID, name.c_str()), value);
+            else if (is_same<T, vec2>())
+                glUniform2f(glGetUniformLocation(shaderID, name.c_str()), value[0], value[1]);
+            else if (is_same<T, vec3>())
+                glUniform3f(glGetUniformLocation(shaderID, name.c_str()), value[0], value[1], value[2]);
+            else if (is_same<T, vec4>())
+                glUniform4f(glGetUniformLocation(shaderID, name.c_str()), value[0], value[1], value[2], value[3]);
+            else if (is_same<T, mat4>())
+                glUniformMatrix4fv(glGetUniformLocation(shaderID, name.c_str()), 1, GL_FALSE, &value[0]);
+            else
+                throw runtime_error("Invalid uniform type");
+            
+            use(0);
+        };
 
         /// Getters
 
