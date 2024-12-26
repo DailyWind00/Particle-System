@@ -6,7 +6,6 @@ layout (location=2) in float fparticleLife;
 
 out vec4 screenColor;
 
-uniform float	time;
 uniform vec2	mouse;
 
 // Generate a random float based on a seed
