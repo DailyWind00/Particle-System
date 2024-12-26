@@ -66,6 +66,31 @@ static void	getMousePos(GLFWwindow *window) {
 	MOUSE_Y = 1.0f - 2.0f * y / WINDOW_HEIGHT;
 }
 
+static void changeParticlesSize(GLFWwindow *window) {
+	static bool sizeKeyPressed = false;
+
+	if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS) {
+		if (sizeKeyPressed)
+			return;
+
+		PARTICLE_SIZE += 1;
+		glPointSize(PARTICLE_SIZE);
+		printVerbose("Particles size : " + to_string(PARTICLE_SIZE));
+		sizeKeyPressed = true;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS) {
+		if (sizeKeyPressed)
+			return;
+
+		PARTICLE_SIZE -= 1;
+		glPointSize(PARTICLE_SIZE);
+		printVerbose("Particles size : " + to_string(PARTICLE_SIZE));
+		sizeKeyPressed = true;
+	}
+	else
+		sizeKeyPressed = false;
+}
+
 // Handle all keyboard & other events
 void	handleEvents(GLFWwindow *window, ParticleSystemUI &particleSystems) {
 	glfwPollEvents();
@@ -79,6 +104,7 @@ void	handleEvents(GLFWwindow *window, ParticleSystemUI &particleSystems) {
 	setFullscreen(window);
 	updateFPS(window);
 	getMousePos(window);
+	changeParticlesSize(window);
 
 	(void)particleSystems; // To remove
 }
