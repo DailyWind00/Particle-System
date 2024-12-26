@@ -15,6 +15,8 @@ typedef struct {
     float life;
 } Particle;
 
+float  randRange(float seed, float min, float max);
+
 __kernel void update(__global Particle* particles, int particleCount, float time, float2 mouse) {
     uint id = get_global_id(0); // Get the unique thread ID
     Particle p = particles[id];

@@ -10,7 +10,7 @@
 			"name": "blackhole",
 			"particleCount": 100000,
 			"shader": ["./systems/blackhole/vertex.glsl", "./systems/blackhole/fragment.glsl"],
-			"kernel": ["./systems/blackhole/kernelPath", "./systems/random_utils.cl"]
+			"kernel": ["./systems/blackhole/blackhole.cl", "./systems/random_utils.cl"]
 		}
 	]
 }
