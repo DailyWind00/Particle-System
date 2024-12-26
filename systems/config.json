@@ -1,0 +1,16 @@
+{
+	"particleSystem": [
+		{
+			"name": "rain",
+			"particleCount": 100000,
+			"shader": ["./systems/rain/vertex.glsl", "./systems/rain/fragment.glsl"],
+			"kernel": ["./systems/rain/rain.cl", "./systems/random_utils.cl"]
+		},
+		{
+			"name": "blackhole",
+			"particleCount": 100000,
+			"shader": ["./systems/blackhole/vertex.glsl", "./systems/blackhole/fragment.glsl"],
+			"kernel": ["./systems/blackhole/kernelPath", "./systems/random_utils.cl"]
+		}
+	]
+}

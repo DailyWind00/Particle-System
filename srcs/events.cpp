@@ -67,7 +67,7 @@ static void	getMousePos(GLFWwindow *window) {
 }
 
 // Handle all keyboard & other events
-void	handleEvents(GLFWwindow *window, Shader &shaders) {
+void	handleEvents(GLFWwindow *window, ParticleSystemUI &particleSystems) {
 	glfwPollEvents();
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -79,6 +79,6 @@ void	handleEvents(GLFWwindow *window, Shader &shaders) {
 	setFullscreen(window);
 	updateFPS(window);
 	getMousePos(window);
-	
-	(void)shaders; // to remove
+
+	(void)particleSystems; // To remove
 }

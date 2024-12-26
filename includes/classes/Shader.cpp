@@ -89,12 +89,6 @@ GLuint Shader::make_shader(const string &vertex_path, const string &fragment_pat
 
 	return shader;
 }
-
-void	Shader::remove_shader(GLuint shaderID) {
-	glDeleteProgram(shaderID);
-	shaderIDs.erase(remove(shaderIDs.begin(), shaderIDs.end(), shaderID), shaderIDs.end());
-	shaders.erase(shaderID);
-}
 /// ---
 
 
@@ -172,6 +166,13 @@ GLuint	Shader::add_shader(const string &vertexPath, const string &fragmentPath, 
 		glUseProgram(data.shaderID);
 
 	return data.shaderID;
+}
+
+// Remove a shader from the Shaders class
+void	Shader::remove_shader(GLuint shaderID) {
+	glDeleteProgram(shaderID);
+	shaderIDs.erase(remove(shaderIDs.begin(), shaderIDs.end(), shaderID), shaderIDs.end());
+	shaders.erase(shaderID);
 }
 
 // Use the next shader in the vector as the current shader

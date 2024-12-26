@@ -26,7 +26,7 @@ void main() {
 	float speed = length(fparticleVel) * 50;
 
 	vec4 baseColor = vec4(
-		1.0f ,
+		1.0f,
 		1.0f,
 		1.0f,
 		alpha
