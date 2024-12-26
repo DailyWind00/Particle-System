@@ -1,10 +1,11 @@
 #pragma once
 
 # include "config.hpp"
+# include "Shader.hpp"
 # include <vector>
 # include <array>
 # include <unordered_map>
-# include "Shader.hpp"
+# include <functional>
 
 using namespace std;
 
@@ -95,15 +96,29 @@ class ParticleSystemUI {
 
 		/// Public functions
 
-		void	activate(const string &name);
-		void	deactivate(const string &name);
+		void	activate(const string &systemName);
+		void	deactivate(const string &systemName);
 		void	drawActivesParticles();
+
+		// Set the uniform to the particle system shader
+		template <typename argument>
+		void setUniform(const string &systemName, const string &uniformName, const argument &args) {
+			auto particleSystem = particleSystems.find(systemName);
+
+			if (particleSystem == particleSystems.end())
+				throw runtime_error("Particle System \"" + systemName + "\" not found");
+
+			if (!particleSystem->second.active)
+				throw runtime_error("Particle System \"" + systemName + "\" is inactive");
+
+			shaders.setUniform(particleSystem->second.shaderID, uniformName, args);
+		};
 
 		/// Getters
 
 		vector<string>					getParticleSystemsNames() const;
 		vector<string>					getActiveParticleSystemsNames() const;
 		vector<string>					getInactiveParticleSystemsNames() const;
-		const JSONParticleSystemConfig &operator[](const string &name);
+		const JSONParticleSystemConfig &operator[](const string &systemName);
 		size_t							getGlobalParticleCount() const;
 };

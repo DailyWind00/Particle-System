@@ -3,7 +3,7 @@
 
 // Keep the window alive, exiting this function mean the process is over
 static void program_loop(GLFWwindow *window, ParticleSystemUI &particleSystems) {
-	double time = 0.0;
+	float time = 0.0;
 
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -11,10 +11,9 @@ static void program_loop(GLFWwindow *window, ParticleSystemUI &particleSystems) 
 		
 		handleEvents(window, particleSystems);
 
-		// particleSystems.draw();
-
-		// shaders.setFloat("time", time);
-		// shaders.setVec2("mouse", MOUSE_X, MOUSE_Y);
+		// particleSystems.setUniform("blackhole", "time", time);
+		// particleSystems.setUniform("blackhole", "mouse", (vec2){MOUSE_X, MOUSE_Y});
+		particleSystems.drawActivesParticles();
 
 		glfwSwapBuffers(window);
 
@@ -32,7 +31,9 @@ void	Rendering(GLFWwindow *window, size_t particleCount) {
 	glPointSize(PARTICLE_SIZE);
 
 	(void)particleCount;
-	ParticleSystemUI particles("./systems/config.json");
+	ParticleSystemUI particles("./config.json");
+	particles.activate("blackhole");
+	// particles.activate("rain");
 
 	displayCommands();
 

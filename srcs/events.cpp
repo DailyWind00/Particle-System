@@ -1,8 +1,8 @@
 #include "config.hpp"
 
 float	FOV = 45.0f;
-double	MOUSE_X = 0.0;
-double	MOUSE_Y = 0.0;
+float	MOUSE_X = 0.0;
+float	MOUSE_Y = 0.0;
 
 // Resize the viewport when the window is resized
 static void resize_viewport(GLFWwindow *window, int width, int height) {

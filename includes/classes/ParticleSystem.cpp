@@ -343,17 +343,18 @@ ParticleSystemUI::~ParticleSystemUI() {
 /// Public functions
 
 // Activate a particle system
-void	ParticleSystemUI::activate(const string &name) {
-	auto particleSystem = particleSystems.find(name);
+// Create the particle system and its shader
+void	ParticleSystemUI::activate(const string &systemName) {
+	auto particleSystem = particleSystems.find(systemName);
 
 	if (particleSystem == particleSystems.end())
-		throw runtime_error("Particle System \"" + name + "\" not found");
+		throw runtime_error("Particle System \"" + systemName + "\" not found");
 
 	if (particleSystem->second.active)
-		throw runtime_error("Particle System \"" + name + "\" is already active");
+		throw runtime_error("Particle System \"" + systemName + "\" is already active");
 
 	if (particleSystem->second.particleCount > globalParticleCount)
-		throw runtime_error("Particle System \"" + name + "\" has too many particles");
+		throw runtime_error("Particle System \"" + systemName + "\" has too many particles");
 
 	globalParticleCount -= particleSystem->second.particleCount;
 	
@@ -372,14 +373,15 @@ void	ParticleSystemUI::activate(const string &name) {
 }
 
 // Deactivate a particle system
-void	ParticleSystemUI::deactivate(const string &name) {
-	auto particleSystem = particleSystems.find(name);
+// Delete the particle system and its shader
+void	ParticleSystemUI::deactivate(const string &systemName) {
+	auto particleSystem = particleSystems.find(systemName);
 
 	if (particleSystem == particleSystems.end())
-		throw runtime_error("Particle System \"" + name + "\" not found");
+		throw runtime_error("Particle System \"" + systemName + "\" not found");
 
 	if (!particleSystem->second.active)
-		throw runtime_error("Particle System \"" + name + "\" is already inactive");
+		throw runtime_error("Particle System \"" + systemName + "\" is already inactive");
 
 	globalParticleCount += particleSystem->second.particleCount;
 
@@ -390,6 +392,16 @@ void	ParticleSystemUI::deactivate(const string &name) {
 	particleSystem->second.shaderID = 0;
 
 	particleSystem->second.active = false;
+}
+
+// Draw all active particle systems
+void	ParticleSystemUI::drawActivesParticles() {
+	for (const auto &particleSystem : particleSystems) {
+		if (particleSystem.second.active) {
+			shaders.use(particleSystem.second.shaderID);
+			particleSystem.second.particleSystem->draw();
+		}
+	}
 }
 /// ---
 
@@ -433,11 +445,11 @@ vector<string>	ParticleSystemUI::getInactiveParticleSystemsNames() const {
 }
 
 // Return the configuration of a particle system
-const JSONParticleSystemConfig &ParticleSystemUI::operator[](const string &name) {
-	auto particleSystem = particleSystems.find(name);
+const JSONParticleSystemConfig &ParticleSystemUI::operator[](const string &systemName) {
+	auto particleSystem = particleSystems.find(systemName);
 
 	if (particleSystem == particleSystems.end())
-		throw runtime_error("Particle System \"" + name + "\" not found");
+		throw runtime_error("Particle System \"" + systemName + "\" not found");
 
 	return particleSystem->second;
 }

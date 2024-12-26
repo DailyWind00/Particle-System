@@ -39,7 +39,7 @@ extern int		WINDOW_HEIGHT;
 extern double	FRAMETIME;
 extern size_t	FPS;
 extern float	FOV;
-extern double	MOUSE_X, MOUSE_Y;
+extern float	MOUSE_X, MOUSE_Y;
 
 // Flags (default values are set in flags.cpp)
 extern bool					RESIZABLE;
