@@ -3,6 +3,8 @@
 # include "config.hpp"
 # include <vector>
 # include <array>
+# include <unordered_map>
+# include "Shader.hpp"
 
 using namespace std;
 
@@ -54,5 +56,54 @@ class ParticleSystem {
 		~ParticleSystem();
 
 		/// Public functions
+		
 		void	draw();
+};
+
+# define NO_LIMIT (size_t)-1
+
+// Example of JSON configuration file:
+// particleSystem: [{
+//     "name": "string",
+//     "particleCount": uint,
+//     "shader": ["vertexPath", "fragmentPath"],
+//     "kernel": ["kernelPath", ...]
+// }, ...]
+typedef struct JSONParticleSystemConfig {
+	string				name;
+	size_t				particleCount;
+	array<string, 2>	shaderPaths;
+	vector<string>		kernelPaths;
+
+	bool				active;
+	ParticleSystem	   *particleSystem = nullptr;
+	GLuint				shaderID = 0;
+} JSONParticleSystemConfig;
+
+// Particle system user interface
+// Optional class for a easier control of multiple particle systems
+// This class accept JSON configuration files:
+class ParticleSystemUI {
+	private:
+		unordered_map<string, JSONParticleSystemConfig>	particleSystems;
+		Shader	shaders;
+		size_t	globalParticleCount;
+
+	public:
+		ParticleSystemUI(const string &JSONConfigPath, size_t globalParticleCount = NO_LIMIT);
+		~ParticleSystemUI();
+
+		/// Public functions
+
+		void	activate(const string &name);
+		void	deactivate(const string &name);
+		void	drawActivesParticles();
+
+		/// Getters
+
+		vector<string>					getParticleSystemsNames() const;
+		vector<string>					getActiveParticleSystemsNames() const;
+		vector<string>					getInactiveParticleSystemsNames() const;
+		const JSONParticleSystemConfig &operator[](const string &name);
+		size_t							getGlobalParticleCount() const;
 };

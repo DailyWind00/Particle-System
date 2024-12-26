@@ -21,10 +21,9 @@
 
 /// Custom includes
 # include "color.h"
-# include "ParticleSystem.hpp"
-class ParticleSystem;
-# include "Shader.hpp"
 class Shader;
+class ParticleSystem;
+class ParticleSystemUI;
 
 /// Global variables
 using namespace std;
@@ -58,7 +57,7 @@ void			DestroyWindow(GLFWwindow *window);
 void			Rendering(GLFWwindow *window, size_t particleCount);
 
 // events.cpp
-void			handleEvents(GLFWwindow *window, Shader &shaders);
+void			handleEvents(GLFWwindow *window, ParticleSystemUI &particleSystems);
 
 // flags.cpp
 int				checkFlags(int argc, char **argv);
