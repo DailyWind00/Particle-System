@@ -1,4 +1,5 @@
 #include "config.hpp"
+#include "ParticleSystem.hpp"
 
 float	FOV = 45.0f;
 float	MOUSE_X = 0.0;
@@ -91,6 +92,57 @@ static void changeParticlesSize(GLFWwindow *window) {
 		sizeKeyPressed = false;
 }
 
+static void changeParticleSystem(GLFWwindow *window, ParticleSystemUI &particleSystems) {
+	static bool particleSystemKeyPressed = false;
+
+	vector<string> particleSystemsNames = particleSystems.getParticleSystemsNames();
+	if (particleSystemsNames.empty())
+		return;
+
+	auto currentSystem = find(
+		particleSystemsNames.begin(),
+		particleSystemsNames.end(),
+		particleSystems.getActiveParticleSystemsNames().back()
+	);
+
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		if (particleSystemKeyPressed)
+			return;
+
+		if (currentSystem == particleSystemsNames.end())
+			particleSystems.activate(particleSystemsNames.front());
+		else {
+			auto nextSystem = currentSystem + 1;
+			if (nextSystem == particleSystemsNames.end())
+				particleSystems.activate(particleSystemsNames.front());
+			else
+				particleSystems.activate(*nextSystem);
+		}
+
+		particleSystems.deactivate(*currentSystem);
+		particleSystemKeyPressed = true;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		if (particleSystemKeyPressed)
+			return;
+
+		if (currentSystem == particleSystemsNames.begin())
+			particleSystems.activate(particleSystemsNames.back());
+		else {
+			auto previousSystem = currentSystem - 1;
+			if (previousSystem == particleSystemsNames.begin())
+				particleSystems.activate(particleSystemsNames.back());
+			else
+				particleSystems.activate(*previousSystem);
+		}
+
+		particleSystems.deactivate(*currentSystem);
+		particleSystemKeyPressed = true;
+	}
+	else
+		particleSystemKeyPressed = false;
+}
+
 // Handle all keyboard & other events
 void	handleEvents(GLFWwindow *window, ParticleSystemUI &particleSystems) {
 	glfwPollEvents();
@@ -105,6 +157,7 @@ void	handleEvents(GLFWwindow *window, ParticleSystemUI &particleSystems) {
 	updateFPS(window);
 	getMousePos(window);
 	changeParticlesSize(window);
+	changeParticleSystem(window, particleSystems);
 
 	(void)particleSystems; // To remove
 }
