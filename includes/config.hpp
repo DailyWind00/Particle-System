@@ -10,7 +10,6 @@
 # include <iostream>
 # include <glad/glad.h>
 # include <GLFW/glfw3.h>
-# include <stb/stb_image.h>
 # include <OpenCL/opencl.hpp>
 # include <OpenCL/cl_gl.h>
 # include <fstream>

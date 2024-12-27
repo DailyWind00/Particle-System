@@ -32,21 +32,6 @@ void	displayCommands() {
 	cout << BLightBlue << "================\n" << ResetColor;
 }
 
-// Load the texture using stb_image and return the data, throw an error if the texture can't be loaded
-unsigned char *stbi_loader(const string &filename, int &width, int &height, int &nrChannels) {
-	printVerbose("> Loading texture " + filename + " -> ", false);
-	stbi_set_flip_vertically_on_load(true); // Using OpenGL coordinate system
-
-	unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrChannels, STBI_default);
-	if (!data) {
-		printVerbose(BRed + "Error" + ResetColor);
-		return nullptr;
-	}
-
-	printVerbose(BGreen + "Texture loaded" + ResetColor);
-	return data;
-}
-
 // Print the message on the standard output if VERBOSE is set to true
 void	printVerbose(const string &message, bool newline) {
 	if (VERBOSE) {

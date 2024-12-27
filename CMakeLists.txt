@@ -16,7 +16,6 @@ add_executable(Particle-System
 	srcs/utils.cpp
 	includes/classes/Shader.cpp
 	includes/classes/ParticleSystem.cpp
-	dependencies/stb/stb_config.cpp
 	dependencies/glad/glad.c
 )
 include_directories(${OpenCL_INCLUDE_DIRS})
