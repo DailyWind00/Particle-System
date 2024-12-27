@@ -19,6 +19,8 @@ typedef struct Particle {
 // The behavior of the particles will be defined in OpenCL kernel functions.
 // This class set a OpenCL context and a OpenCL queue.
 class ParticleSystem {
+	friend class ParticleSystemUI;
+
 	private:
 		// OpenGL variables
 
@@ -55,8 +57,29 @@ class ParticleSystem {
 		~ParticleSystem();
 
 		/// Public functions
-		
+
 		void	draw();
+
+		// Set the kernel arguments
+		// kernel format : void update(__global Particle *particles, int particleCount, ...)
+		// Use OpenCL types
+		template <typename... arguments>
+		void	setKernelArgs(arguments... args) {
+			try {
+				/// Set the kernel arguments
+				int index = 0;
+
+				// Mandatory arguments
+				kernel.setArg(index++, particles);
+				kernel.setArg(index++, (cl_int)particleCount);
+
+				// User arguments
+				(void)(int[]){0, (kernel.setArg(index++, args), 0)...};
+			}
+			catch (const cl::Error &e) {
+				throw runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
+			}
+		}
 };
 
 # define NO_LIMIT (size_t)-1
@@ -111,6 +134,22 @@ class ParticleSystemUI {
 				throw runtime_error("Particle System \"" + systemName + "\" is inactive");
 
 			shaders.setUniform(particleSystem->shaderID, uniformName, args);
+		};
+
+		// Set the kernel arguments to the particle system kernel
+		// kernel format : void update(__global Particle *particles, int particleCount, ...)
+		// Use OpenCL types
+		template <typename... arguments>
+		void setKernelArgs(const string &systemName, arguments... args) {
+			auto particleSystem = operator[](systemName);
+
+			if (particleSystem == particleSystems.end())
+				throw runtime_error("Particle System \"" + systemName + "\" not found");
+
+			if (!particleSystem->active)
+				throw runtime_error("Particle System \"" + systemName + "\" is inactive");
+
+			particleSystem->particleSystem->setKernelArgs(args...);
 		};
 
 		/// Getters

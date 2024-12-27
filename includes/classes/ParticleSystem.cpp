@@ -249,31 +249,19 @@ void	ParticleSystem::createOpenGLBuffers(size_t bufferSize) {
 
 /// Public functions
 
+// Draw the particles
 void	ParticleSystem::draw() {
-	static cl_float	time = 0;
-
 	try {
-		// Set the kernel arguments
-		cl_float2 mouse;
-		mouse.s[0] = MOUSE_X;
-		mouse.s[1] = MOUSE_Y;
-
-		kernel.setArg(0, particles);
-		kernel.setArg(1, (cl_int)particleCount);
-		kernel.setArg(2, time);
-		kernel.setArg(3, mouse);
-
-		// Execute the kernel
+		/// Execute the kernel
 		queue.enqueueAcquireGLObjects(&memObjects);
 		queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(particleCount), cl::NullRange);
 		queue.enqueueReleaseGLObjects(&memObjects);
 		queue.finish();
 
+		/// Draw the particles
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_POINTS, 0, particleCount);
 		glBindVertexArray(0);
-
-		time += 0.1f;
 	}
 	catch (const cl::Error &e) {
 		throw runtime_error("OpenCL error : " + (string)e.what() + " (" + CLstrerrno(e.err()) + ")");
@@ -391,11 +379,9 @@ void	ParticleSystemUI::deactivate(const string &systemName) {
 
 // Draw all active particle systems
 void	ParticleSystemUI::drawActivesParticleSystems() {
-	for (const auto &particleSystem : particleSystems) {
-		if (particleSystem.active) {
-			shaders.use(particleSystem.shaderID);
+	for (const JSONParticleSystemConfig &particleSystem : particleSystems) {
+		if (particleSystem.active)
 			particleSystem.particleSystem->draw();
-		}
 	}
 }
 /// ---

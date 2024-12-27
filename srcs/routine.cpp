@@ -20,6 +20,15 @@ static void program_loop(GLFWwindow *window, ParticleSystemUI &particleSystems) 
 					"mouse",
 					(vec2){MOUSE_X, MOUSE_Y}
 				);
+
+				cl_float2 mouse;
+				mouse.s[0] = MOUSE_X;
+				mouse.s[1] = MOUSE_Y;
+				particleSystems.setKernelArgs(
+					particleSystem->name,
+					time,
+					mouse
+				);
 				break;
 			}
 		}
@@ -28,7 +37,7 @@ static void program_loop(GLFWwindow *window, ParticleSystemUI &particleSystems) 
 
 		glfwSwapBuffers(window);
 
-		time += 0.001 * FRAMETIME;
+		time += 0.001;
 	}
 }
 
