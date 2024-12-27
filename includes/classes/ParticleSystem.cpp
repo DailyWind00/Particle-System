@@ -281,9 +281,11 @@ void	ParticleSystem::draw() {
 // This constructor does not actually create the particle systems, it only stores their configuration
 // The particle systems are created when they are activated
 // The globalParticleCount is the maximum number of particles shared between all particle systems (default = unlimited)
-ParticleSystemUI::ParticleSystemUI(const string &configPath, size_t globalParticleCount) {
+ParticleSystemUI::ParticleSystemUI(const string &configPath, long globalParticleCount) {
 	printVerbose("Creating Particle System UI");
 
+	if (globalParticleCount <= 0)
+		throw runtime_error("Global particle count must be greater than 0");
 	this->globalParticleCount = globalParticleCount;
 
 	try {
@@ -306,6 +308,11 @@ ParticleSystemUI::ParticleSystemUI(const string &configPath, size_t globalPartic
 			particleSystemConfig.active = false;
 			particleSystemConfig.particleSystem = nullptr;
 			particleSystemConfig.shaderID = 0;
+
+			if (particleSystemConfig.particleCount > globalParticleCount)
+				throw runtime_error("Particle System \"" + particleSystemConfig.name + "\" has too many particles");
+			if (particleSystemConfig.particleCount <= 0)
+				throw runtime_error("Particle System \"" + particleSystemConfig.name + "\" must have at least one particle");
 
 			this->particleSystems.push_back(particleSystemConfig);
 
@@ -435,7 +442,7 @@ VJSONParticleSystemConfigs::const_iterator	ParticleSystemUI::end() const {
 }
 
 // Return the current global particle count
-const size_t	&ParticleSystemUI::getGlobalParticleCount() const {
+const long	&ParticleSystemUI::getGlobalParticleCount() const {
 	return globalParticleCount;
 }
 /// ---

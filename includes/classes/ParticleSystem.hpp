@@ -82,7 +82,7 @@ class ParticleSystem {
 		}
 };
 
-# define NO_LIMIT (size_t)-1
+# define NO_LIMIT numeric_limits<long>::max()
 
 // Example of JSON configuration file:
 // particleSystem: [{
@@ -93,7 +93,7 @@ class ParticleSystem {
 // }, ...]
 typedef struct JSONParticleSystemConfig {
 	string				name;
-	size_t				particleCount;
+	long				particleCount;
 	array<string, 2>	shaderPaths;
 	vector<string>		kernelPaths;
 
@@ -110,10 +110,10 @@ class ParticleSystemUI {
 	private:
 		VJSONParticleSystemConfigs	particleSystems;
 		Shader						shaders;
-		size_t						globalParticleCount;
+		long						globalParticleCount;
 
 	public:
-		ParticleSystemUI(const string &JSONConfigPath, size_t globalParticleCount = NO_LIMIT);
+		ParticleSystemUI(const string &JSONConfigPath, long globalParticleCount = NO_LIMIT);
 		~ParticleSystemUI();
 
 		/// Public functions
@@ -160,5 +160,5 @@ class ParticleSystemUI {
 		VJSONParticleSystemConfigs::const_iterator  front() const;
 		VJSONParticleSystemConfigs::const_iterator  back() const;
 		VJSONParticleSystemConfigs::const_iterator  end() const;
-		const size_t				 			   &getGlobalParticleCount() const;
+		const long					 			   &getGlobalParticleCount() const;
 };
