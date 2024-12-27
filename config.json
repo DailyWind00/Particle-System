@@ -11,6 +11,12 @@
 			"particleCount": 100000,
 			"shader": ["./systems/blackhole/vertex.glsl", "./systems/blackhole/fragment.glsl"],
 			"kernel": ["./systems/blackhole/blackhole.cl", "./systems/random_utils.cl"]
+		},
+		{
+			"name": "plasma",
+			"particleCount": 100000,
+			"shader": ["./systems/plasma/vertex.glsl", "./systems/plasma/fragment.glsl"],
+			"kernel": ["./systems/plasma/plasma.cl", "./systems/random_utils.cl"]
 		}
 	]
 }
