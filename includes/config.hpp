@@ -11,7 +11,6 @@
 # include <glad/glad.h>
 # include <GLFW/glfw3.h>
 # include <stb/stb_image.h>
-# include <glm/glm.hpp>
 # include <OpenCL/opencl.hpp>
 # include <OpenCL/cl_gl.h>
 # include <fstream>
