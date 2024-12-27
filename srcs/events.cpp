@@ -92,51 +92,51 @@ static void changeParticlesSize(GLFWwindow *window) {
 		sizeKeyPressed = false;
 }
 
+// Switch the active particle system
 static void changeParticleSystem(GLFWwindow *window, ParticleSystemUI &particleSystems) {
 	static bool particleSystemKeyPressed = false;
 
-	vector<string> particleSystemsNames = particleSystems.getParticleSystemsNames();
-	if (particleSystemsNames.empty())
-		return;
-
-	auto currentSystem = find(
-		particleSystemsNames.begin(),
-		particleSystemsNames.end(),
-		particleSystems.getActiveParticleSystemsNames().back()
-	);
+	// Find currently active particle system
+	VJSONParticleSystemConfigs::const_iterator currentParticleSystem;
+	for (auto particleSystem = particleSystems.begin(); particleSystem != particleSystems.end(); particleSystem++) {
+		if (particleSystem->active) {
+			currentParticleSystem = particleSystem;
+			break;
+		}
+	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		if (particleSystemKeyPressed)
 			return;
 
-		if (currentSystem == particleSystemsNames.end())
-			particleSystems.activate(particleSystemsNames.front());
-		else {
-			auto nextSystem = currentSystem + 1;
-			if (nextSystem == particleSystemsNames.end())
-				particleSystems.activate(particleSystemsNames.front());
-			else
-				particleSystems.activate(*nextSystem);
-		}
+		// load next particle system
+		
+		VJSONParticleSystemConfigs::const_iterator nextParticleSystem;
+		if (particleSystems.back() == currentParticleSystem)
+			nextParticleSystem = particleSystems.front();
+		else
+			nextParticleSystem = currentParticleSystem + 1;
 
-		particleSystems.deactivate(*currentSystem);
+		particleSystems.deactivate(currentParticleSystem->name);
+		particleSystems.activate(nextParticleSystem->name);
+
 		particleSystemKeyPressed = true;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		if (particleSystemKeyPressed)
 			return;
 
-		if (currentSystem == particleSystemsNames.begin())
-			particleSystems.activate(particleSystemsNames.back());
-		else {
-			auto previousSystem = currentSystem - 1;
-			if (previousSystem == particleSystemsNames.begin())
-				particleSystems.activate(particleSystemsNames.back());
-			else
-				particleSystems.activate(*previousSystem);
-		}
+		// load previous particle system
 
-		particleSystems.deactivate(*currentSystem);
+		VJSONParticleSystemConfigs::const_iterator previousParticleSystem;
+		if (particleSystems.front() == currentParticleSystem)
+			previousParticleSystem = particleSystems.back();
+		else
+			previousParticleSystem = currentParticleSystem - 1;
+
+		particleSystems.deactivate(currentParticleSystem->name);
+		particleSystems.activate(previousParticleSystem->name);
+
 		particleSystemKeyPressed = true;
 	}
 	else

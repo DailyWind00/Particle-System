@@ -11,8 +11,20 @@ static void program_loop(GLFWwindow *window, ParticleSystemUI &particleSystems) 
 		
 		handleEvents(window, particleSystems);
 
-		particleSystems.setUniform(particleSystems.getActiveParticleSystemsNames().back(), "mouse", (vec2){MOUSE_X, MOUSE_Y});
-		particleSystems.drawActivesParticles();
+		// Set the uniform for the active particle system
+		for (auto particleSystem = particleSystems.begin(); particleSystem != particleSystems.end(); particleSystem++) {
+			if (particleSystem->active) {
+
+				particleSystems.setShaderUniform(
+					particleSystem->name,
+					"mouse",
+					(vec2){MOUSE_X, MOUSE_Y}
+				);
+				break;
+			}
+		}
+
+		particleSystems.drawActivesParticleSystems();
 
 		glfwSwapBuffers(window);
 
@@ -31,8 +43,7 @@ void	Rendering(GLFWwindow *window, size_t particleCount) {
 
 	(void)particleCount;
 	ParticleSystemUI particles("./config.json");
-	particles.activate("blackhole");
-	// particles.activate("rain");
+	particles.activate(particles.front()->name);
 
 	displayCommands();
 

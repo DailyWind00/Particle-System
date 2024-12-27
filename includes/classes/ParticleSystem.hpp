@@ -4,8 +4,6 @@
 # include "Shader.hpp"
 # include <vector>
 # include <array>
-# include <unordered_map>
-# include <functional>
 
 using namespace std;
 
@@ -80,15 +78,16 @@ typedef struct JSONParticleSystemConfig {
 	ParticleSystem	   *particleSystem = nullptr;
 	GLuint				shaderID = 0;
 } JSONParticleSystemConfig;
+typedef vector<JSONParticleSystemConfig> VJSONParticleSystemConfigs;
 
 // Particle system user interface
 // Optional class for a easier control of multiple particle systems
 // This class accept JSON configuration files:
 class ParticleSystemUI {
 	private:
-		unordered_map<string, JSONParticleSystemConfig>	particleSystems;
-		Shader	shaders;
-		size_t	globalParticleCount;
+		VJSONParticleSystemConfigs	particleSystems;
+		Shader						shaders;
+		size_t						globalParticleCount;
 
 	public:
 		ParticleSystemUI(const string &JSONConfigPath, size_t globalParticleCount = NO_LIMIT);
@@ -98,27 +97,29 @@ class ParticleSystemUI {
 
 		void	activate(const string &systemName);
 		void	deactivate(const string &systemName);
-		void	drawActivesParticles();
+		void	drawActivesParticleSystems();
 
 		// Set the uniform to the particle system shader
 		template <typename argument>
-		void setUniform(const string &systemName, const string &uniformName, const argument &args) {
-			auto particleSystem = particleSystems.find(systemName);
+		void setShaderUniform(const string &systemName, const string &uniformName, const argument &args) {
+			auto particleSystem = operator[](systemName);
 
 			if (particleSystem == particleSystems.end())
 				throw runtime_error("Particle System \"" + systemName + "\" not found");
 
-			if (!particleSystem->second.active)
+			if (!particleSystem->active)
 				throw runtime_error("Particle System \"" + systemName + "\" is inactive");
 
-			shaders.setUniform(particleSystem->second.shaderID, uniformName, args);
+			shaders.setUniform(particleSystem->shaderID, uniformName, args);
 		};
 
 		/// Getters
 
-		vector<string>					getParticleSystemsNames() const;
-		vector<string>					getActiveParticleSystemsNames() const;
-		vector<string>					getInactiveParticleSystemsNames() const;
-		const JSONParticleSystemConfig &operator[](const string &systemName);
-		size_t							getGlobalParticleCount() const;
+		VJSONParticleSystemConfigs::const_iterator  operator[](const string &systemName) const;
+		VJSONParticleSystemConfigs::const_iterator  operator[](const uint &index) const;
+		VJSONParticleSystemConfigs::const_iterator  begin() const;
+		VJSONParticleSystemConfigs::const_iterator  front() const;
+		VJSONParticleSystemConfigs::const_iterator  back() const;
+		VJSONParticleSystemConfigs::const_iterator  end() const;
+		const size_t				 			   &getGlobalParticleCount() const;
 };
