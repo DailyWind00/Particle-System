@@ -316,7 +316,7 @@ ParticleSystemUI::ParticleSystemUI(const string &configPath, long globalParticle
 
 			this->particleSystems.push_back(particleSystemConfig);
 
-			cout << "Particle System \"" << particleSystemConfig.name << "\" created\n";
+			printVerbose("Particle System \"" + particleSystemConfig.name + "\" created");
 		}
 	}
 	catch(const exception& e) {
