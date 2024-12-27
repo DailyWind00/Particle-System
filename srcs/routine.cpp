@@ -42,7 +42,7 @@ static void program_loop(GLFWwindow *window, ParticleSystemUI &particleSystems) 
 }
 
 // Will call the program loop
-void	Rendering(GLFWwindow *window, size_t particleCount) {
+void	Rendering(GLFWwindow *window, const string &jsonConfigPath) {
 	glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -50,8 +50,7 @@ void	Rendering(GLFWwindow *window, size_t particleCount) {
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	glPointSize(PARTICLE_SIZE);
 
-	(void)particleCount;
-	ParticleSystemUI particles("./config.json");
+	ParticleSystemUI particles(jsonConfigPath);
 	particles.activate(particles.front()->name);
 
 	displayCommands();

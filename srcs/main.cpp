@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
 
 	try {
 		if (checkFlags(argc, argv) == argc - 1) {
-			cerr << BRed << "No particle count specified\n" << ResetColor;
+			cerr << BRed << "No json config file specified\n" << ResetColor;
 			cout << "> Run the program with the -h flag to display the help message\n";
 			exit(EXIT_FAILURE);
 		}
@@ -18,17 +18,9 @@ int main(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	size_t particleCount = 0;
-	stringstream ss(argv[argc - 1]);
-	ss >> particleCount;
-	if (ss.fail()) {
-		cerr << BRed << "Invalid particle count\n" << ResetColor;
-		exit(EXIT_FAILURE);
-	}
-
 	try {
 		GLFWwindow *window = CreateWindow();
-		Rendering(window, particleCount);
+		Rendering(window, argv[argc - 1]);
 		DestroyWindow(window);
 	}
 	catch(const exception& e) {

@@ -6,7 +6,7 @@ size_t	FPS = 0;
 // Display the help message
 void	displayHelp(char *executable_name) {
 	cout << BGreen <<"=== 42 Particle-System by DailyWind ===\n" << ResetColor;
-	cout << "Usage: " << executable_name << " [options] <ParticleCount>\n";
+	cout << "Usage: " << executable_name << " [options] <json config>\n";
 	cout << "Options:\n";
 	cout << "\t-v, --verbose\t\t\tVerbose mode\n";
 	cout << "\t-r, --resizable\t\t\tResizable window\n";
@@ -28,6 +28,7 @@ void	displayCommands() {
 	cout << BLightBlue << "=== Commands ===\n" << ResetColor;
 	cout << " F5\t\t\t: Recompile the current shader\n";
 	cout << " Left/Right arrows\t: Switch particle system\n";
+	cout << " +/-\t\t\t: Change particles size\n";
 	cout << " ESC\t\t\t: Close the window\n";
 	printVerbose(BLightBlue + "================" + ResetColor);
 }

@@ -54,7 +54,7 @@ GLFWwindow		*CreateWindow();
 void			DestroyWindow(GLFWwindow *window);
 
 // routine.cpp
-void			Rendering(GLFWwindow *window, size_t particleCount);
+void			Rendering(GLFWwindow *window, const string &jsonConfigPath);
 
 // events.cpp
 void			handleEvents(GLFWwindow *window, ParticleSystemUI &particleSystems);

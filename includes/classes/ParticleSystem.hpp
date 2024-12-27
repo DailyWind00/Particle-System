@@ -62,6 +62,7 @@ class ParticleSystem {
 
 		// Set the kernel arguments
 		// kernel format : void update(__global Particle *particles, int particleCount, ...)
+		//  - Particle = struct { cl_float position[3], cl_float velocity[3], cl_float life }
 		// Use OpenCL types
 		template <typename... arguments>
 		void	setKernelArgs(arguments... args) {
@@ -138,6 +139,7 @@ class ParticleSystemUI {
 
 		// Set the kernel arguments to the particle system kernel
 		// kernel format : void update(__global Particle *particles, int particleCount, ...)
+		//  - Particle = struct { cl_float position[3], cl_float velocity[3], cl_float life }
 		// Use OpenCL types
 		template <typename... arguments>
 		void setKernelArgs(const string &systemName, arguments... args) {

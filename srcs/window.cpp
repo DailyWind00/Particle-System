@@ -1,7 +1,7 @@
 #include "config.hpp"
 
-int WINDOW_WIDTH = 1920 / 1.5;
-int WINDOW_HEIGHT = 1080 / 1.5;
+int WINDOW_WIDTH = 1080 * 0.80f;
+int WINDOW_HEIGHT = 1080 * 0.80f;
 
 // Initialize GLFW and create a window
 GLFWwindow	*CreateWindow() {
