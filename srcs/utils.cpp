@@ -26,11 +26,10 @@ void	displayCommands() {
 		return;
 
 	cout << BLightBlue << "=== Commands ===\n" << ResetColor;
-	cout << " F5\t\t\t: Recompile the current shader\n";
 	cout << " Left/Right arrows\t: Switch particle system\n";
 	cout << " +/-\t\t\t: Change particles size\n";
 	cout << " ESC\t\t\t: Close the window\n";
-	printVerbose(BLightBlue + "================" + ResetColor);
+	cout << BLightBlue << "================\n" << ResetColor;
 }
 
 // Load the texture using stb_image and return the data, throw an error if the texture can't be loaded
