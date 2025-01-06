@@ -1,6 +1,8 @@
 # Particle-System
 Particle System creator & renderer using OpenCL as compute shaders
 
+Particle System are only composed of points, textures aren't handled for now
+
 #
 To load particle systems, you have a json API, connecting your kernel programs (compute shaders) and shaders to the renderer.
 
@@ -50,3 +52,4 @@ You can load particle systems like this in config.json:
   }
 ```
 #
+[](exemple.gif)
