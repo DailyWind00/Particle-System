@@ -1,2 +1,52 @@
 # Particle-System
-Interoperability and optimization using OpenCL
+Particle System creator & renderer using OpenCL as compute shaders
+
+#
+To load particle systems, you have a json API, connecting your kernel programs (compute shaders) and shaders to the renderer.
+
+To run the program, clone the repo, make and execute is with a json config path as a parameter, additionals flags can be added before the json :
+
+```shell
+# Clone the repo
+  git clone https://github.com/DailyWind00/Particle-System/ && cd Particle-System
+
+# Create the executable
+  make
+
+# Run the program
+  ./Particle-System [flags] <json config>
+```
+Here are the flags availables and the commands that can be used during runtime :
+```
+  Flags:
+    -v, --verbose	: Verbose mode
+    -r, --resizable	: Resizable window
+    -s, --size [value]	: Set the particles size (default 1)
+        --no-tooltip	: Disable the commands tooltip in the standard output
+    -h, --help		: Display this information
+
+  Commands:
+    Left/Right arrows	: Switch particle system
+    +/-			: Change particles size
+    ESC			: Close the window
+```
+
+
+You can load particle systems like this in config.json:
+```json
+  {
+  	"particleSystem": [
+  		{
+  			"name": "string",
+  			"particleCount": "unsigned int",
+  			"shader": ["vertex path", "fragment path"],
+  			"kernel": ["kernel program path", "..."]
+  		},
+  		{
+  			"..."
+  		},
+  		"..."
+  	]
+  }
+```
+#
