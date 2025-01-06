@@ -11,11 +11,6 @@ void	displayHelp(char *executable_name) {
 	cout << "\t-v, --verbose\t\t\tVerbose mode\n";
 	cout << "\t-r, --resizable\t\t\tResizable window\n";
 	cout << "\t-s, --size [value]\t\tSet the particles size (default 1)\n";
-	cout << "\t-k, --keyboard [option]\t\tChange the keyboard language\n";
-	cout << LightGray << "\t\t│ > Options availables :                     │\n" << ResetColor;
-	cout << LightGray << "\t\t│ azerty : set the keyboard to azerty        │\n" << ResetColor;
-	cout << LightGray << "\t\t│ qwerty : set the keyboard to qwerty        │\n" << ResetColor;
-	cout << LightGray << "\t\t╰────────────────────────────────────────────╯\n" << ResetColor;
 	cout << "\t    --no-tooltip\t\tDisable the commands tooltip in the standard output\n";
 	cout << "\t-h, --help\t\t\tDisplay this information\n";
 }
