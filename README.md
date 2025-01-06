@@ -52,4 +52,6 @@ You can load particle systems like this in config.json:
   }
 ```
 #
-[](exemple.gif)
+<p align="center">
+  <img src="exemple.gif"/>
+</p>
