@@ -1,4 +1,4 @@
-# Particle-System
+# Particle-System ✅125/100
 Particle-system creator & renderer using OpenCL as compute shaders
 
 Particle-systems are only composed of points, textures aren't handled for now
