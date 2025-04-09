@@ -26,8 +26,8 @@ __kernel void update(__global Particle* particles, int particleCount, float time
 		// Generate random positions in a circle shape just outside the window
 		float angle = randRange(seed, 0.0f, 2.0f * M_PI);
 		float radius = randRange(seed * 2, 0.35f, 1.2f);
-		p.position.x = center.x + radius * cos(angle) * 0.5f;
-		p.position.y = center.y + radius * sin(angle) * 0.5f;
+		p.position.x = center.x + radius * cos(angle - time * 50) * 0.5f;
+		p.position.y = center.y + radius * sin(angle - time * 50) * 0.5f;
 		p.position.z = 0.0f;
 
 		p.velocity.x = 0.0f;
