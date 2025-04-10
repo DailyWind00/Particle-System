@@ -1,9 +1,10 @@
 # Particle-System ✅125/100
 Particle-system creator & renderer using OpenCL as compute shaders
 
-Particle-systems are :
-  - only composed of points, textures aren't handled for now
-  - technically in 3D, but you need to add a camera to really see it, and exemple (except rain) are in 2D
+Particle-systems :
+  - are only composed of points, textures aren't handled for now
+  - are technically in 3D, but you need to add a camera to really see it, and exemple (except rain) are in 2D
+  - can have many particles, up to ~3 millions, depending on your GPU memory
 
 > Graphic libraries :
 >   - OpenGL v4.5 (v2.0 support [here](https://github.com/DailyWind00/Particle-System/tree/OpenGL-2.0-Support))
@@ -39,7 +40,7 @@ Here are the flags availables and the commands that can be used during runtime :
 ```
 
 
-You can load particle systems like this in config.json:
+You can load particle systems like this in "*config.json*":
 ```json
   {
   	"particleSystem": [
@@ -61,15 +62,19 @@ You can load particle systems like this in config.json:
 You have a template for beginner in "[*./systems/exemple/*](https://github.com/DailyWind00/Particle-System/tree/main/systems/exemple)" to get started with particle-systems creation :
   - *compute.cl* is the compute shader, meaning :
     - It's written in OpenCL C (meaning you can use C syntax highlight but no IntelliSense)
-    - It's main purpose is to create/respawn and move up to millions of particles (~3 millions, depending on your GPU memory)
+    - It's main purpose is to create/respawn and move up to millions of particles at the same time
 
   - *fragment.frag* is the fragment shader, meaning :
     - It's where you render your particles, with color depending on what you want
 
 > You also have the vertex shader for additional particle movement, but ideally you should not use it unless you really know what you are doing
 
-  Consider the "*./src/* *" folder as an User Interface (UI) for all your tests :
-   - You can add uniform variables to shaders in the "[*program loop*](https://github.com/DailyWind00/Particle-System/blob/main/srcs/routine.cpp#L4-L42)", in the exemple I pass the time and the mouse position to my shaders
+Finally, add your files to "*config.json*" following the exemple right above, and enjoy you new Particle System !
+
+#
+
+Consider the "*./src/* *" folder as an User Interface (UI) for all your tests :
+  - You can add uniform variables to shaders in the "[*program loop*](https://github.com/DailyWind00/Particle-System/blob/main/srcs/routine.cpp#L4-L42)", in the exemple I pass the time and the mouse position to my shaders
 
 ###### If you need help or want to implement a complex feature, contact me at dailywind.github@gmail.com
 
