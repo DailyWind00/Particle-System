@@ -5,6 +5,7 @@ Particle-systems :
   - are only composed of points, textures aren't handled for now
   - are technically in 3D, but you need to add a camera to really see it, and exemple (except rain) are in 2D
   - can have many particles, up to ~3 millions, depending on your GPU memory
+  - never instanciate particles in CPU, particles are created in the compute shader
 
 > Graphic libraries :
 >   - OpenGL v4.5 (v2.0 support [here](https://github.com/DailyWind00/Particle-System/tree/OpenGL-2.0-Support))
