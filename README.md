@@ -1,11 +1,13 @@
 # Particle-System ✅125/100
 Particle-system creator & renderer using OpenCL as compute shaders
 
-Particle-systems are only composed of points, textures aren't handled for now
+Particle-systems are :
+  - only composed of points, textures aren't handled for now
+  - technically in 3D, but you need to add a camera to really see it, and exemple (except rain) are in 2D
 
-Graphic libraries :
-  - OpenGL v4.5
-  - OpenCL v3.0 (currently adding 2.0 support [in this branch](https://github.com/DailyWind00/Particle-System/tree/OpenCL-2.0-Support))
+> Graphic libraries :
+>   - OpenGL v4.5
+>   - OpenCL v3.0 (currently adding 2.0 support [in this branch](https://github.com/DailyWind00/Particle-System/tree/OpenCL-2.0-Support))
 #
 To load particle systems, you have a json API, connecting your kernel programs (compute shaders) and shaders to the renderer.
 
