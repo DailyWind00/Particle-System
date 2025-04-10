@@ -7,7 +7,7 @@ Particle-systems are :
 
 > Graphic libraries :
 >   - OpenGL v4.5
->   - OpenCL v3.0 (currently adding 2.0 support [in this branch](https://github.com/DailyWind00/Particle-System/tree/OpenCL-2.0-Support))
+>   - OpenCL v2.0
 #
 To load particle systems, you have a json API, connecting your kernel programs (compute shaders) and shaders to the renderer.
 
