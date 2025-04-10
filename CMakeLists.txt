@@ -5,8 +5,7 @@ cmake_policy(SET CMP0072 NEW)
 find_package(OpenGL REQUIRED)
 find_package(OpenCL REQUIRED)
 
-add_definitions(-DCL_TARGET_OPENCL_VERSION=450) # OpenCL 4.5
-
+add_definitions(-DCL_TARGET_OPENCL_VERSION=300) # OpenCL 3.0
 add_executable(Particle-System 
 	srcs/main.cpp
 	srcs/window.cpp
