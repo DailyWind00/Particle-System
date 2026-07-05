@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.5.0)
 project(Particle-System VERSION 1.0.0)
 cmake_policy(SET CMP0072 NEW)
 
-find_package(OpenGL REQUIRED)
+find_package(OpenGL REQUIRED COMPONENTS OpenGL EGL)
 find_package(OpenCL REQUIRED)
 
-add_definitions(-DCL_TARGET_OPENCL_VERSION=200) # OpenCL 2.0
+add_definitions(-DCL_TARGET_OPENCL_VERSION=300) # OpenCL 2.0
 add_executable(Particle-System 
 	srcs/main.cpp
 	srcs/window.cpp
@@ -25,5 +25,5 @@ target_include_directories(Particle-System PRIVATE includes/classes)
 
 target_compile_options(Particle-System PRIVATE -Wall -Wextra -O3 -g -fPIE)
 
-target_link_libraries(Particle-System OpenGL::GL glfw)
+target_link_libraries(Particle-System OpenGL::GL OpenGL::EGL glfw)
 target_link_libraries(Particle-System ${OpenCL_LIBRARIES})

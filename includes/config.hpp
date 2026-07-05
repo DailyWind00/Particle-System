@@ -8,13 +8,16 @@
 
 /// System includes
 # include <iostream>
+# define GLFW_EXPOSE_NATIVE_EGL
 # include <glad/glad.h>
 # include <GLFW/glfw3.h>
+# include <GLFW/glfw3native.h>
 # include <OpenCL/opencl.hpp>
 # include <OpenCL/cl_gl.h>
 # include <fstream>
 # include <string.h>
 # include <GL/glx.h>
+# include <EGL/egl.h>
 # include <JSON/json_config.hpp>
 
 /// Custom includes

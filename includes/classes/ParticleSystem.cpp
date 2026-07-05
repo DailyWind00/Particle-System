@@ -130,17 +130,34 @@ cl::Device	ParticleSystem::getDevice(const cl::Platform &platform) {
 // Create an OpenCL context with OpenGL interoperability based on the operating system
 cl::Context	ParticleSystem::createContext(const cl::Device &device, const cl::Platform &platform) {
 	#if defined(__linux__) || defined(__unix__)
-		cl_context_properties properties[] = { // Interoperability with OpenGL (Linux)
+		GLFWwindow *currentWindow = glfwGetCurrentContext();
+		if (currentWindow != nullptr) {
+			EGLDisplay display = glfwGetEGLDisplay();
+			EGLContext context = glfwGetEGLContext(currentWindow);
+			if (display != EGL_NO_DISPLAY && context != EGL_NO_CONTEXT) {
+				cl_context_properties properties[] = {
+					CL_GL_CONTEXT_KHR, (cl_context_properties)context,
+					CL_EGL_DISPLAY_KHR, (cl_context_properties)display,
+					CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
+					0
+				};
+				return cl::Context(device, properties);
+			}
+		}
+
+		cl_context_properties properties[] = { // Interoperability with OpenGL (Linux/X11)
 			CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
 			CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),
 			CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
 			0
 		};
+		return cl::Context(device, properties);
 	#elif __APPLE__
 		cl_context_properties properties[] = { // Interoperability with OpenGL (MacOS)
 			CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE, (cl_context_properties)CGLGetShareGroup(CGLGetCurrentContext()),
 			0
 		};
+		return cl::Context(device, properties);
 	#elif _WIN32
 		cl_context_properties properties[] = { // Interoperability with OpenGL (Windows)
 			CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
@@ -148,10 +165,10 @@ cl::Context	ParticleSystem::createContext(const cl::Device &device, const cl::Pl
 			CL_CONTEXT_PLATFORM, (cl_context_properties)(platform)(),
 			0
 		};
+		return cl::Context(device, properties);
+	#else
+		throw runtime_error("Unsupported platform for OpenCL/OpenGL interop");
 	#endif
-
-	cl::Context context(device, properties);
-	return context;
 }
 
 // Build a OpenCL program from files in VkernelProgramPaths

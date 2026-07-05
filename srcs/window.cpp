@@ -1,11 +1,26 @@
 #include "config.hpp"
+#include <cstdlib>
+#include <unistd.h>
 
 int WINDOW_WIDTH = 1080 * 0.80f;
 int WINDOW_HEIGHT = 1080 * 0.80f;
 
+static void configureGraphicsBackend() {
+#if defined(__linux__) || defined(__unix__)
+	if (access("/proc/driver/nvidia", F_OK) == 0) {
+		if (getenv("__NV_PRIME_RENDER_OFFLOAD") == nullptr)
+			setenv("__NV_PRIME_RENDER_OFFLOAD", "1", 0);
+		if (getenv("__GLX_VENDOR_LIBRARY_NAME") == nullptr)
+			setenv("__GLX_VENDOR_LIBRARY_NAME", "nvidia", 0);
+	}
+#endif
+}
+
 // Initialize GLFW and create a window
 GLFWwindow	*CreateWindow() {
 	GLFWwindow	*window;
+
+	configureGraphicsBackend();
 
 	if (!glfwInit()) {
 		cerr << BRed << "Failed to initialize GLFW" << ResetColor << '\n';
